@@ -244,8 +244,8 @@ export default function LandingPage() {
           <p className="text-[13px] uppercase tracking-[0.2em] font-bold text-[#1A1A1A]/40 mb-10">Resources & Documentation</p>
           <div className="flex flex-wrap justify-center gap-6">
             {[
-              { icon: FlaskConical, label: "Demo Environment" },
-              { icon: FileText, label: "IEEE Paper" },
+              { icon: FlaskConical, label: "Demo video", href: "https://youtu.be/AoJstWllhmE" },
+              { icon: FileText, label: "IEEE Paper", href: "/Blockchain-Based%20Patch%20Management%20System-1.pdf" },
               // { icon: ExternalLink, label: "Technical Docs" }
             ].map((link, idx) => (
               <motion.div
@@ -256,13 +256,7 @@ export default function LandingPage() {
                 transition={{ duration: 0.4, delay: idx * 0.1 }}
                 className="flex items-center gap-3 px-8 py-5 rounded-full border border-[#1A1A1A]/10 bg-white hover:border-[#1A1A1A]/30 transition-colors cursor-pointer group hover:-translate-y-1 duration-300 shadow-sm hover:shadow-md"
                 onClick={() => {
-                  if (link.label === "IEEE Paper") {
-                    window.open(
-                      "/Blockchain-Based%20Patch%20Management%20System-1.pdf",
-                      "_blank",
-                      "noopener,noreferrer"
-                    );
-                  }
+                  window.open(link.href, "_blank", "noopener,noreferrer");
                 }}
               >
                 <link.icon size={20} className="text-[#1A1A1A]/60 group-hover:text-[#A9FD5F] transition-colors" />
