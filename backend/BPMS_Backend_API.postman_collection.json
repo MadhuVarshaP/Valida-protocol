@@ -1,0 +1,315 @@
+{
+  "info": {
+    "_postman_id": "backend-collection",
+    "name": "BPMS Backend API",
+    "description": "Complete test suite for BPMS backend",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3001/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Get User Role",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3001/api/user/role/0x742d35Cc6634C0532925a3b844Bc1e7595f25e3d",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "user", "role", "0x742d35Cc6634C0532925a3b844Bc1e7595f25e3d"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Register Device",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-wallet-address",
+                "value": "0x742d35Cc6634C0532925a3b844Bc1e7595f25e3d"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"walletAddress\": \"0x362b2e1e0e8B0c0aF95cdcfDF7b6f37d0cF2dB3a\",\n  \"deviceId\": \"sensor-001\",\n  \"deviceType\": \"sensor\",\n  \"location\": \"base-station-1\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/admin/register-device",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "admin", "register-device"]
+            }
+          }
+        },
+        {
+          "name": "Authorize Publisher",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-wallet-address",
+                "value": "0x742d35Cc6634C0532925a3b844Bc1e7595f25e3d"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"walletAddress\": \"0x8ba1f109551bD432803012645Ac136ddd64DBA72\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/admin/authorize-publisher",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "admin", "authorize-publisher"]
+            }
+          }
+        },
+        {
+          "name": "Get All Devices",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-wallet-address",
+                "value": "0x742d35Cc6634C0532925a3b844Bc1e7595f25e3d"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/admin/devices",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "admin", "devices"]
+            }
+          }
+        },
+        {
+          "name": "Get Installation Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-wallet-address",
+                "value": "0x742d35Cc6634C0532925a3b844Bc1e7595f25e3d"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/admin/logs?limit=50",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "admin", "logs"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Publisher",
+      "item": [
+        {
+          "name": "Upload Patch File",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-wallet-address",
+                "value": "0x8ba1f109551bD432803012645Ac136ddd64DBA72"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "patchFile",
+                  "type": "file",
+                  "src": "/path/to/test_patch.bin"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/publisher/upload",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "publisher", "upload"]
+            }
+          }
+        },
+        {
+          "name": "Publish Patch Metadata",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-wallet-address",
+                "value": "0x8ba1f109551bD432803012645Ac136ddd64DBA72"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"softwareName\": \"Ubuntu\",\n  \"version\": \"22.04-security-1\",\n  \"ipfsHash\": \"QmXxxx...\",\n  \"fileHash\": \"0x1234567890abcdef...\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/publisher/publish",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "publisher", "publish"]
+            }
+          }
+        },
+        {
+          "name": "Get Publisher Patches",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-wallet-address",
+                "value": "0x8ba1f109551bD432803012645Ac136ddd64DBA72"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/publisher/patches",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "publisher", "patches"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Device",
+      "item": [
+        {
+          "name": "Get Available Patches",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-wallet-address",
+                "value": "0x362b2e1e0e8B0c0aF95cdcfDF7b6f37d0cF2dB3a"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/device/patches",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "device", "patches"]
+            }
+          }
+        },
+        {
+          "name": "Get Patch Metadata",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-wallet-address",
+                "value": "0x362b2e1e0e8B0c0aF95cdcfDF7b6f37d0cF2dB3a"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/device/patch/1731414000000",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "device", "patch", "1731414000000"]
+            }
+          }
+        },
+        {
+          "name": "Download Patch",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-wallet-address",
+                "value": "0x362b2e1e0e8B0c0aF95cdcfDF7b6f37d0cF2dB3a"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3001/api/device/patch/1731414000000/download",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "device", "patch", "1731414000000", "download"]
+            }
+          }
+        },
+        {
+          "name": "Report Installation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-wallet-address",
+                "value": "0x362b2e1e0e8B0c0aF95cdcfDF7b6f37d0cF2dB3a"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patchId\": 1731414000000,\n  \"success\": true\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3001/api/admin/logs",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3001",
+              "path": ["api", "device", "report-installation"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
