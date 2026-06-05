@@ -3,8 +3,9 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAccount, useDisconnect } from "wagmi";
+import { BrowserProvider, Contract } from "ethers";
 
-type Role = "admin" | "publisher" | "device" | "unauthorized" | null;
+type Role = "admin" | "publisher" | "device" | "auditor" | "unauthorized" | null;
 
 interface WalletContextType {
   address: string | null;
@@ -61,11 +62,31 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
         }
 
         const data = (await response.json()) as { role?: Role; status?: string };
-        const detectedRole =
+        let detectedRole: Role =
           data.status === "active" &&
-          (data.role === "admin" || data.role === "publisher" || data.role === "device")
+          (data.role === "admin" || data.role === "publisher" || data.role === "device" || data.role === "auditor")
             ? data.role
             : "unauthorized";
+
+        // If backend doesn't know this wallet, check on-chain for auditor registration
+        if (detectedRole === "unauthorized") {
+          const vulnAddr = process.env.NEXT_PUBLIC_VULN_CONTRACT_ADDRESS;
+          if (vulnAddr && typeof window !== "undefined") {
+            try {
+              const eth = (window as unknown as { ethereum?: object }).ethereum;
+              if (eth) {
+                const provider = new BrowserProvider(eth as Parameters<typeof BrowserProvider>[0]);
+                const contract = new Contract(
+                  vulnAddr,
+                  ["function registeredAuditors(address) view returns (bool)"],
+                  provider
+                );
+                const isAuditor = await contract.registeredAuditors(normalizedAddress) as boolean;
+                if (isAuditor) detectedRole = "auditor";
+              }
+            } catch { /* on-chain check is best-effort */ }
+          }
+        }
 
         if (!isCancelled) setRole(detectedRole);
       } catch {
@@ -85,6 +106,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     if (role === "admin") router.push("/admin/dashboard");
     else if (role === "publisher") router.push("/publisher/dashboard");
     else if (role === "device") router.push("/device/dashboard");
+    else if (role === "auditor") router.push("/auditor/dashboard");
     else router.push("/unauthorized");
   }, [isConnected, isRoleLoading, role, router]);
 

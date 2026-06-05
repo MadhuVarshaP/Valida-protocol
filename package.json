@@ -1,0 +1,9 @@
+{
+  "name": "zeno-circuits",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Zeno ZK circuit dependencies",
+  "dependencies": {
+    "circomlib": "^2.0.5"
+  }
+}

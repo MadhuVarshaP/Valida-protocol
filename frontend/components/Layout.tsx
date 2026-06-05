@@ -19,7 +19,13 @@ import {
     ChevronRight,
     Menu,
     Wallet,
-    Zap
+    Zap,
+    ShieldAlert,
+    Bug,
+    Wrench,
+    UserCheck,
+    Coins,
+    Fingerprint,
 } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -42,6 +48,9 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen }: { isMobileOpen: boole
                     { icon: Cpu, label: "Devices", href: "/admin/devices" },
                     { icon: Users, label: "Publishers", href: "/admin/publishers" },
                     { icon: Package, label: "Patches", href: "/admin/patches" },
+                    { icon: ShieldAlert, label: "Vulnerabilities", href: "/admin/vulnerabilities" },
+                    { icon: Coins, label: "Escrow", href: "/admin/escrow" },
+                    { icon: Fingerprint, label: "ZK Proofs", href: "/admin/zk-proofs" },
                     { icon: History, label: "Audit Logs", href: "/admin/logs" },
                     { icon: Settings, label: "Settings", href: "/admin/settings" },
                 ];
@@ -57,6 +66,14 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen }: { isMobileOpen: boole
                     { icon: LayoutDashboard, label: "Dashboard", href: "/device/dashboard" },
                     { icon: Package, label: "Registry patches", href: "/device/patches" },
                     { icon: Zap, label: "Sync timeline", href: "/device/sync" },
+                ];
+            case "auditor":
+                return [
+                    { icon: LayoutDashboard, label: "Dashboard", href: "/auditor/dashboard" },
+                    { icon: Bug, label: "Submit Vulnerability", href: "/auditor/submit" },
+                    { icon: Wrench, label: "Submit Fix", href: "/auditor/submit-fix" },
+                    { icon: Zap, label: "Generate ZK Proof", href: "/auditor/generate-proof" },
+                    { icon: UserCheck, label: "Registration", href: "/auditor/register" },
                 ];
             default:
                 return [];
@@ -161,6 +178,7 @@ export const Navbar = ({ setIsMobileOpen }: { setIsMobileOpen: (v: boolean) => v
             case "admin": return { label: "Administrator", color: "bg-[#A9FD5F] text-[#1A1A1A]" };
             case "publisher": return { label: "Publisher", color: "bg-blue-500/10 text-blue-500" };
             case "device": return { label: "Device", color: "bg-amber-500/10 text-amber-500" };
+            case "auditor": return { label: "Auditor", color: "bg-purple-500/10 text-purple-600" };
             default: return { label: "Unauthorized", color: "bg-rose-500/10 text-rose-500" };
         }
     };
