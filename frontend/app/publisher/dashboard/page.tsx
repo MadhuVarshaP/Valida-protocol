@@ -49,7 +49,7 @@ export default function PublisherDashboard() {
     const [patches, setPatches] = useState<Patch[]>([]);
     const [logs, setLogs] = useState<Log[]>([]);
     const [analytics, setAnalytics] = useState<Analytics | null>(null);
-    const explorerBase = process.env.NEXT_PUBLIC_EXPLORER_BASE_URL || "https://sepolia.basescan.org";
+    const explorerBase = process.env.NEXT_PUBLIC_EXPLORER_BASE_URL || "https://explorer-testnet.iopn.io";
 
     useEffect(() => {
         if (!address) return;

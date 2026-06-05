@@ -24,18 +24,27 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
         const inAdminRoute = pathname.startsWith("/admin");
         const inPublisherRoute = pathname.startsWith("/publisher");
         const inDeviceRoute = pathname.startsWith("/device");
+        const inAuditorRoute = pathname.startsWith("/auditor");
 
         if (inAdminRoute && role !== "admin") {
             if (role === "publisher") router.push("/publisher/dashboard");
             else if (role === "device") router.push("/device/dashboard");
+            else if (role === "auditor") router.push("/auditor/dashboard");
             else router.push("/unauthorized");
         } else if (inPublisherRoute && role !== "publisher") {
             if (role === "admin") router.push("/admin/dashboard");
             else if (role === "device") router.push("/device/dashboard");
+            else if (role === "auditor") router.push("/auditor/dashboard");
             else router.push("/unauthorized");
         } else if (inDeviceRoute && role !== "device") {
             if (role === "admin") router.push("/admin/dashboard");
             else if (role === "publisher") router.push("/publisher/dashboard");
+            else if (role === "auditor") router.push("/auditor/dashboard");
+            else router.push("/unauthorized");
+        } else if (inAuditorRoute && role !== "auditor") {
+            if (role === "admin") router.push("/admin/dashboard");
+            else if (role === "publisher") router.push("/publisher/dashboard");
+            else if (role === "device") router.push("/device/dashboard");
             else router.push("/unauthorized");
         }
     }, [address, isLoading, pathname, role, router]);
