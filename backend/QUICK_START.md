@@ -1,4 +1,4 @@
-# BPMS Backend - Quick Start Guide
+# Valida Protocol Backend - Quick Start Guide
 
 ## 🚀 Get Backend Running in 5 Minutes
 
@@ -15,7 +15,7 @@ Expected: Should show MongoDB Atlas connection string
 
 **If missing, update `.env`:**
 ```env
-MONGODB_URI=mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/bpms
+MONGODB_URI=mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/valida
 PORT=3001
 ```
 
@@ -29,7 +29,7 @@ You should see:
 ```
 {"level":"info","message":"MongoDB connected successfully","time":"2024-11-12T..."}
 {"level":"info","message":"Blockchain initialized successfully","time":"2024-11-12T..."}
-{"level":"info","message":"BPMS backend listening on port 3001","time":"2024-11-12T..."}
+{"level":"info","message":"Valida Protocol backend listening on port 3001","time":"2024-11-12T..."}
 ```
 
 ### Step 3: Verify Backend is Running
@@ -55,7 +55,7 @@ Before you can test, you must create an admin user in MongoDB.
 
 1. Open MongoDB Compass
 2. Connect to your MongoDB Atlas cluster
-3. Select database: `bpms`
+3. Select database: `valida`
 4. Select collection: `users`
 5. Click "Insert Document"
 6. Paste this JSON:
@@ -74,7 +74,7 @@ Before you can test, you must create an admin user in MongoDB.
 ### Option B: MongoDB Shell
 
 ```bash
-mongosh "mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/bpms"
+mongosh "mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/valida"
 
 # In mongosh shell:
 db.users.insertOne({
@@ -223,7 +223,7 @@ curl -X GET "http://localhost:3001/api/admin/logs" \
 
 1. Open Postman
 2. Click "Import"
-3. Drag `BPMS_Backend_API.postman_collection.json` into Postman
+3. Drag `Valida_Backend_API.postman_collection.json` into Postman
 4. Click "Import"
 5. Update wallet addresses in each request
 6. Send requests
@@ -263,7 +263,7 @@ Connect to MongoDB and verify data was stored:
 
 ```bash
 # Connect to MongoDB
-mongosh "mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/bpms"
+mongosh "mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/valida"
 
 # View users
 db.users.find()
@@ -319,7 +319,7 @@ npm run dev
 cat .env | grep MONGODB_URI
 
 # Try connecting directly
-mongosh "mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/bpms"
+mongosh "mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/valida"
 
 # Check IP whitelist in MongoDB Atlas
 # add 0.0.0.0/0 if testing locally

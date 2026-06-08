@@ -22,7 +22,7 @@ import {
 import { useWallet } from "@/context/WalletContext";
 import { useToast } from "@/context/ToastContext";
 import { apiGet, apiPost, apiPatch } from "@/lib/api";
-import { bpmsContractAbi } from "@/lib/contractAbi";
+import { validaContractAbi } from "@/lib/contractAbi";
 import { getContractWithSigner, getFrontendContractAddress } from "@/lib/ethers";
 import { normalizeHash, sha256OfBuffer } from "@/lib/patchIntegrity";
 import { isVersionNewer } from "@/lib/versionCompare";
@@ -379,7 +379,7 @@ export default function DeviceDashboard() {
             setPhaseMessage("Computing SHA-256 and comparing to on-chain fileHash…");
             const localHash = normalizeHash(await sha256OfBuffer(buf));
 
-            const contract = await getContractWithSigner(contractAddress, bpmsContractAbi);
+            const contract = await getContractWithSigner(contractAddress, validaContractAbi);
             const onChain = await contract.patches(patchToInstall.patchId);
             const chainHash = normalizeHash(String(onChain.fileHash));
 

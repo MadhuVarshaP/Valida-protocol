@@ -1,8 +1,8 @@
-# BPMS Backend - Complete Implementation Summary
+# Valida Protocol Backend - Complete Implementation Summary
 
 ## 🎯 What Was Built
 
-A **production-grade, security-first backend** for the Blockchain-Based Patch Management System with:
+A **production-grade, security-first backend** for the Valida Protocol with:
 
 ✅ **13 REST API endpoints** organized by role (Admin/Publisher/Device)
 ✅ **Zero private key storage** - Frontend/device always owns keys
@@ -53,7 +53,7 @@ backend/
 │   ├── TESTING_GUIDE.md           # Complete API reference
 │   ├── STEP_BY_STEP_TESTING.md    # Test with expected outputs
 │   ├── IMPLEMENTATION_CHECKLIST.md# Verification checklist
-│   ├── BPMS_Backend_API.postman_collection.json # Postman tests
+│   ├── Valida_Backend_API.postman_collection.json # Postman tests
 │   ├── test-all-endpoints.sh      # Automated test script
 │   └── test-db-connection.sh      # MongoDB connection test
 ├── server.js                      # Express app & bootstrap
@@ -208,7 +208,7 @@ chmod +x test-all-endpoints.sh
 See [STEP_BY_STEP_TESTING.md](STEP_BY_STEP_TESTING.md)
 
 **Option C:** Import Postman collection
-See [BPMS_Backend_API.postman_collection.json](BPMS_Backend_API.postman_collection.json)
+See [Valida_Backend_API.postman_collection.json](Valida_Backend_API.postman_collection.json)
 
 ### 5. Test Device Agent
 ```bash
@@ -405,7 +405,7 @@ curl http://localhost:3001/health
 curl http://localhost:3001/api/user/role/0x742d35cc6634c0532925a3b844bc1e7595f25e3d
 
 # Check MongoDB connection
-mongosh "mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/bpms"
+mongosh "mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/valida"
 
 # Check device agent
 node device-agent/patchAgent.js
@@ -457,7 +457,7 @@ All well within acceptable ranges for production ✅
 
 ## ✨ Summary
 
-You now have a **production-ready BPMS backend** that:
+You now have a **production-ready Valida Protocol backend** that:
 
 ✅ Follows **zero-trust security principles**
 ✅ Implements **secure wallet authentication**

@@ -1,8 +1,8 @@
-# ✅ BPMS Backend - Delivery Checklist & Verification
+# ✅ Valida Protocol Backend - Delivery Checklist & Verification
 
 **Date:** March 11, 2024
 **Status:** ✅ COMPLETE & PRODUCTION READY
-**Location:** `/Users/madhu/Documents/projects/BPMS/backend/`
+**Location:** `/Users/madhu/Documents/projects/Valida Protocol/backend/`
 
 ---
 
@@ -155,7 +155,7 @@
 |------|---------|--------|
 | [test-all-endpoints.sh](test-all-endpoints.sh) | Automated test suite | ✅ |
 | [test-db-connection.sh](test-db-connection.sh) | MongoDB connection test | ✅ |
-| [BPMS_Backend_API.postman_collection.json](BPMS_Backend_API.postman_collection.json) | Postman collection | ✅ |
+| [Valida_Backend_API.postman_collection.json](Valida_Backend_API.postman_collection.json) | Postman collection | ✅ |
 
 ---
 
@@ -424,7 +424,7 @@ Before going to production:
 
 **Tools:**
 - [test-all-endpoints.sh](test-all-endpoints.sh) - Automated tests
-- [BPMS_Backend_API.postman_collection.json](BPMS_Backend_API.postman_collection.json) - Postman
+- [Valida_Backend_API.postman_collection.json](Valida_Backend_API.postman_collection.json) - Postman
 - [device-agent/patchAgent.js](device-agent/patchAgent.js) - Device sim
 
 ---

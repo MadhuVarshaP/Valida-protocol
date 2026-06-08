@@ -1,4 +1,4 @@
-# BPMS Backend Testing Guide
+# Valida Protocol Backend Testing Guide
 
 ## Prerequisites
 

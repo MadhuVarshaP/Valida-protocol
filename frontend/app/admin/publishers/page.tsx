@@ -8,7 +8,7 @@ import { Modal, FormInput } from "@/components/Forms";
 import { Plus, AlertCircle, ShieldCheck, Ban } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
 import { useToast } from "@/context/ToastContext";
-import { bpmsContractAbi } from "@/lib/contractAbi";
+import { validaContractAbi } from "@/lib/contractAbi";
 import { getContractWithSigner, getFrontendContractAddress } from "@/lib/ethers";
 
 type Publisher = {
@@ -88,7 +88,7 @@ export default function AdminPublishers() {
         setIsSubmitting(true);
         try {
             const contractAddress = getFrontendContractAddress();
-            const contract = await getContractWithSigner(contractAddress, bpmsContractAbi);
+            const contract = await getContractWithSigner(contractAddress, validaContractAbi);
             const tx = await contract.authorizePublisher(address.trim());
             await tx.wait();
 
@@ -109,7 +109,7 @@ export default function AdminPublishers() {
         setRevokingWallet(walletAddress);
         try {
             const contractAddress = getFrontendContractAddress();
-            const contract = await getContractWithSigner(contractAddress, bpmsContractAbi);
+            const contract = await getContractWithSigner(contractAddress, validaContractAbi);
             const tx = await contract.revokePublisher(walletAddress);
             await tx.wait();
 

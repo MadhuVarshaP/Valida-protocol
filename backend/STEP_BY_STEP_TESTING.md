@@ -1,4 +1,4 @@
-# BPMS Backend - Step-by-Step Testing with Expected Outputs
+# Valida Protocol Backend - Step-by-Step Testing with Expected Outputs
 
 This document shows the exact commands to run and what outputs to expect.
 
@@ -18,7 +18,7 @@ This document shows the exact commands to run and what outputs to expect.
 
 1. Open MongoDB Compass
 2. Connect to your cluster
-3. Navigate: `bpms` → Collections → `users`
+3. Navigate: `valida` → Collections → `users`
 4. Click "Add Data" → "Insert Document"
 5. Paste and modify:
 

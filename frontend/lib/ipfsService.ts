@@ -1,5 +1,5 @@
 /**
- * IPFS & Encryption service for Zeno Phase 3 — vulnerability detail reveals.
+ * IPFS & Encryption service for Valida Phase 3 — vulnerability detail reveals.
  *
  * Encryption: AES-GCM with a key derived from NEXT_PUBLIC_REVEAL_ENCRYPTION_KEY.
  * MVP NOTE: Symmetric key in env is for development. In production, replace with
@@ -14,7 +14,7 @@ const PBKDF2_ITERATIONS = 100_000;
 const PINATA_PIN_URL = "https://api.pinata.cloud/pinning/pinJSONToIPFS";
 
 async function deriveKey(): Promise<CryptoKey> {
-	const rawKey = process.env.NEXT_PUBLIC_REVEAL_ENCRYPTION_KEY ?? "zeno-default-key-change-in-production";
+	const rawKey = process.env.NEXT_PUBLIC_REVEAL_ENCRYPTION_KEY ?? "valida-default-key-change-in-production";
 	const keyMaterial = await crypto.subtle.importKey(
 		"raw",
 		new TextEncoder().encode(rawKey),
@@ -25,7 +25,7 @@ async function deriveKey(): Promise<CryptoKey> {
 	return crypto.subtle.deriveKey(
 		{
 			name: "PBKDF2",
-			salt: new TextEncoder().encode("zeno-vuln-salt-v1"),
+			salt: new TextEncoder().encode("valida-vuln-salt-v1"),
 			iterations: PBKDF2_ITERATIONS,
 			hash: "SHA-256",
 		},
@@ -98,7 +98,7 @@ export async function encryptAndUploadVulnerability(
 	const encrypted = await encryptDetails(details);
 	const cid = await uploadToIPFS(
 		{ ...encrypted, submissionId, uploadedAt: Date.now() },
-		`zeno-vuln-${submissionId}`
+		`valida-vuln-${submissionId}`
 	);
 	return cid;
 }

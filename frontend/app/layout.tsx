@@ -22,7 +22,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "BPMS | Blockchain-Based Patch Management System",
+  title: "Valida Protocol",
   description: "Secure, decentralized patch management for enterprise-grade software distribution.",
 };
 

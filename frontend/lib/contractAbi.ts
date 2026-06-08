@@ -1,4 +1,4 @@
-export const bpmsContractAbi = [
+export const validaContractAbi = [
 	{
 		"inputs": [
 			{

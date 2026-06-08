@@ -111,7 +111,7 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen }: { isMobileOpen: boole
                         "text-xl md:text-2xl font-black tracking-tight text-[#1A1A1A] transition-opacity duration-300",
                         isCollapsed && "w-0 opacity-0 overflow-hidden"
                     )}>
-                        BPMS
+                        Valida Protocol
                     </span>
                 </div>
 

@@ -1,4 +1,4 @@
-# BPMS Backend - Implementation Verification & Checklist
+# Valida Protocol Backend - Implementation Verification & Checklist
 
 ## ✅ Security Principles Verified
 
@@ -302,7 +302,7 @@ Contains:
 - ✅ Production deployment guide
 
 ### 4. Postman Collection
-Path: [BPMS_Backend_API.postman_collection.json](BPMS_Backend_API.postman_collection.json)
+Path: [Valida_Backend_API.postman_collection.json](Valida_Backend_API.postman_collection.json)
 Contains:
 - ✅ Public endpoints group
 - ✅ Admin endpoints group
@@ -419,7 +419,7 @@ The backend is production-ready with:
 
 ## ✨ Summary
 
-The BPMS backend is fully implemented with:
+The Valida Protocol backend is fully implemented with:
 
 ✅ Production-grade security (zero private keys)
 ✅ Complete REST API (13 endpoints)

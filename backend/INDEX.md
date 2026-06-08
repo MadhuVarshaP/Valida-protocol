@@ -1,4 +1,4 @@
-# BPMS Backend - Documentation Index
+# Valida Protocol Backend - Documentation Index
 
 Welcome! This file helps you navigate all backend documentation.
 
@@ -66,7 +66,7 @@ Welcome! This file helps you navigate all backend documentation.
   - Open issues (if any)
 
 ### Tools & Testing
-- **[BPMS_Backend_API.postman_collection.json](BPMS_Backend_API.postman_collection.json)**
+- **[Valida_Backend_API.postman_collection.json](Valida_Backend_API.postman_collection.json)**
   - Postman collection for API testing
   - Pre-configured requests
   - Import into Postman for rapid testing
@@ -105,7 +105,7 @@ Welcome! This file helps you navigate all backend documentation.
 → [IMPLEMENTATION_SUMMARY.md - API Endpoints](IMPLEMENTATION_SUMMARY.md#📊-api-endpoints-13-total)
 
 ### "I want to test with Postman"
-→ Import [BPMS_Backend_API.postman_collection.json](BPMS_Backend_API.postman_collection.json)
+→ Import [Valida_Backend_API.postman_collection.json](Valida_Backend_API.postman_collection.json)
 
 ### "I need to deploy to production"
 → See [README.md - Production Deployment](README.md#📈-production-deployment)
@@ -179,7 +179,7 @@ backend/
 │   ├── IMPLEMENTATION_SUMMARY.md
 │   ├── IMPLEMENTATION_CHECKLIST.md
 │   ├── INDEX.md (you are here)
-│   ├── BPMS_Backend_API.postman_collection.json
+│   ├── Valida_Backend_API.postman_collection.json
 │   ├── test-all-endpoints.sh
 │   └── test-db-connection.sh
 ├── server.js            # Express entry point
@@ -216,7 +216,7 @@ node device-agent/patchAgent.js
 
 ### Connect to MongoDB
 ```bash
-mongosh "mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/bpms"
+mongosh "mongodb+srv://madhuvarsha0608:madhuvarsha1234%40@cluster0.9edwm3j.mongodb.net/valida"
 ```
 
 ---

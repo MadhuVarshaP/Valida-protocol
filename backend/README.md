@@ -1,6 +1,6 @@
-# BPMS Backend
+# Valida Protocol Backend
 
-Node.js + Express backend for secure blockchain-based patch management system.
+Node.js + Express backend for secure valida protocol.
 
 ## 🏗️ Architecture
 
@@ -91,7 +91,7 @@ Required variables:
 
 ```env
 PORT=3001
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/bpms
+MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/valida
 RPC_URL=https://sepolia.infura.io/v3/YOUR_KEY
 CONTRACT_ADDRESS=0xYourContractAddress
 PINATA_API_KEY=your_pinata_api_key

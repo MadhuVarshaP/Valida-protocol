@@ -1,5 +1,5 @@
 export const zkVerifierContractAbi = [
-	{ "inputs": [{ "internalType": "address", "name": "_zenoVulnerability", "type": "address" }], "stateMutability": "nonpayable", "type": "constructor" },
+	{ "inputs": [{ "internalType": "address", "name": "_validaVulnerability", "type": "address" }], "stateMutability": "nonpayable", "type": "constructor" },
 	{
 		"anonymous": false,
 		"inputs": [
@@ -52,7 +52,7 @@ export const zkVerifierContractAbi = [
 	},
 	{
 		"inputs": [],
-		"name": "zenoVulnerability",
+		"name": "validaVulnerability",
 		"outputs": [{ "internalType": "address", "name": "", "type": "address" }],
 		"stateMutability": "view",
 		"type": "function"
@@ -80,7 +80,7 @@ export const zkVerifierContractAbi = [
 					{ "internalType": "uint8", "name": "templateType", "type": "uint8" },
 					{ "internalType": "uint256", "name": "verifiedAt", "type": "uint256" }
 				],
-				"internalType": "struct ZenoZKVerifier.ZKProofSubmission",
+				"internalType": "struct ValidaZKVerifier.ZKProofSubmission",
 				"name": "",
 				"type": "tuple"
 			}

@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-# Zeno Phase 4 — ZK Trusted Setup & Verifier Generation
+# Valida Phase 4 — ZK Trusted Setup & Verifier Generation
 # ============================================================
 # Prerequisites:
 #   npm install -g circom snarkjs
@@ -50,8 +50,8 @@ snarkjs powersoftau new bn128 12 \
 snarkjs powersoftau contribute \
   "${BUILD_DIR}/pot12_0000.ptau" \
   "${BUILD_DIR}/pot12_0001.ptau" \
-  --name="Zeno Dev Contributor" -v \
-  -e="zeno-platform-entropy-$(date +%s)"
+  --name="Valida Dev Contributor" -v \
+  -e="valida-platform-entropy-$(date +%s)"
 
 snarkjs powersoftau prepare phase2 \
   "${BUILD_DIR}/pot12_0001.ptau" \
@@ -71,8 +71,8 @@ snarkjs groth16 setup \
 snarkjs zkey contribute \
   "${BUILD_DIR}/${CIRCUIT_NAME}_0000.zkey" \
   "${BUILD_DIR}/${CIRCUIT_NAME}_final.zkey" \
-  --name="Zeno" -v \
-  -e="zeno-zkey-entropy-$(date +%s)"
+  --name="Valida" -v \
+  -e="valida-zkey-entropy-$(date +%s)"
 
 echo "   ✓ Final zkey → ${BUILD_DIR}/${CIRCUIT_NAME}_final.zkey"
 
@@ -119,8 +119,8 @@ echo "  Setup complete!"
 echo ""
 echo "  Next steps:"
 echo "  1. Deploy AuthBypassVerifier.sol to Base Sepolia"
-echo "  2. Deploy ZenoZKVerifier.sol with ZenoVulnerability address"
-echo "  3. Call addTemplate(1, <AuthBypassVerifier address>) on ZenoZKVerifier"
-echo "  4. Call setZKVerifier(<ZenoZKVerifier address>) on ZenoVulnerability"
+echo "  2. Deploy ValidaZKVerifier.sol with ValidaVulnerability address"
+echo "  3. Call addTemplate(1, <AuthBypassVerifier address>) on ValidaZKVerifier"
+echo "  4. Call setZKVerifier(<ValidaZKVerifier address>) on ValidaVulnerability"
 echo "  5. Set NEXT_PUBLIC_ZK_VERIFIER_ADDRESS in frontend .env"
 echo "════════════════════════════════════════════════════════════"

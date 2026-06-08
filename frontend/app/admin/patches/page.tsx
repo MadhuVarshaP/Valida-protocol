@@ -8,7 +8,7 @@ import { Search, Activity, TrendingUp, Clock, Ban } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
 import { apiGet } from "@/lib/api";
 import { useToast } from "@/context/ToastContext";
-import { bpmsContractAbi } from "@/lib/contractAbi";
+import { validaContractAbi } from "@/lib/contractAbi";
 import { getContractWithSigner, getFrontendContractAddress } from "@/lib/ethers";
 
 type Patch = {
@@ -55,7 +55,7 @@ export default function AdminPatches() {
         setDisablingPatchId(patch.patchId);
         try {
             const contractAddress = getFrontendContractAddress();
-            const contract = await getContractWithSigner(contractAddress, bpmsContractAbi);
+            const contract = await getContractWithSigner(contractAddress, validaContractAbi);
             const tx = await contract.disablePatch(patch.patchId);
             await tx.wait();
 

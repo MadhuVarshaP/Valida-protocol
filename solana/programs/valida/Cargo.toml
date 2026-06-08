@@ -1,0 +1,21 @@
+[package]
+name = "valida"
+version = "0.1.0"
+description = "Valida Protocol — Solana Anchor program for patch management and vulnerability disclosure"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "valida"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+
+[dependencies]
+anchor-lang = "0.30.0"
+anchor-spl = "0.30.0"
