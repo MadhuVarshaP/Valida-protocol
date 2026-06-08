@@ -1,26 +1,50 @@
-# Dependencies (root circomlib + per-package installs in frontend/backend)
+# ── Dependencies ─────────────────────────────────────────────────────────────
 node_modules/
 
-# ZK trusted setup / compile output (regenerate: bash scripts/setup-zk.sh)
+# ── Build artifacts ───────────────────────────────────────────────────────────
 build/
+dist/
+out/
 
-# Copied from build/ by setup-zk.sh — do not commit; run setup after clone
+# Solana / Anchor — compiled binaries and incremental build cache
+# Regenerate with: anchor build
+solana/target/
+
+# Next.js
+.next/
+frontend/.next/
+
+# ZK trusted setup output (regenerate: bash scripts/setup-zk.sh)
 frontend/public/circuits/
 
-# Environment secrets
+# ── Environment secrets ───────────────────────────────────────────────────────
+# NEVER commit .env files — use .env.example as the template
 .env
 .env.local
 .env.*.local
+*.env
 
-# OS / editor
+# ── Solana keypairs ───────────────────────────────────────────────────────────
+# Wallet keypairs must never be committed
+*.json.key
+id.json
+solana-keypair.json
+solana/target/deploy/*-keypair.json
+
+# ── OS / editor ───────────────────────────────────────────────────────────────
 .DS_Store
 *.swp
 *.swo
 .idea/
 .vscode/
 
-# Logs
+# ── Logs ──────────────────────────────────────────────────────────────────────
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+
+# ── Misc ──────────────────────────────────────────────────────────────────────
+*.pem
+coverage/
+.vercel
