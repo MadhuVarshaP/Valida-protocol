@@ -29,6 +29,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@coral-xyz/anchor", "npm:0.30.1"],\
+          ["@noble/hashes", "npm:2.2.0"],\
           ["@solana/web3.js", "npm:1.98.4"],\
           ["@types/chai", "npm:4.3.20"],\
           ["@types/mocha", "npm:10.0.10"],\
@@ -133,6 +134,13 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "../../../../.yarn/berry/cache/@noble-hashes-npm-1.8.0-a397449e64-10c0.zip/node_modules/@noble/hashes/",\
         "packageDependencies": [\
           ["@noble/hashes", "npm:1.8.0"]\
+        ],\
+        "linkType": "HARD"\
+      }],\
+      ["npm:2.2.0", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@noble-hashes-npm-2.2.0-edea701f99-10c0.zip/node_modules/@noble/hashes/",\
+        "packageDependencies": [\
+          ["@noble/hashes", "npm:2.2.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -1542,6 +1550,7 @@ const RAW_RUNTIME_STATE =
         "packageLocation": "./",\
         "packageDependencies": [\
           ["@coral-xyz/anchor", "npm:0.30.1"],\
+          ["@noble/hashes", "npm:2.2.0"],\
           ["@solana/web3.js", "npm:1.98.4"],\
           ["@types/chai", "npm:4.3.20"],\
           ["@types/mocha", "npm:10.0.10"],\

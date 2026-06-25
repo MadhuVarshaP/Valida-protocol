@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useWallet } from "@/context/WalletContext";
 import {
   ShieldCheck,
   ArrowRight,
@@ -16,11 +15,9 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/UI";
 import { motion } from "framer-motion";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectWallet } from "@/components/ConnectWallet";
 
 export default function LandingPage() {
-  const { isLoading, isConnected, address } = useWallet();
-
   const pillars = [
     {
       icon: Lock,
@@ -66,42 +63,7 @@ export default function LandingPage() {
         </div> */}
 
         <div className="flex items-center gap-4">
-          <ConnectButton.Custom>
-            {({ account, chain, openAccountModal, openChainModal, openConnectModal, mounted }) => {
-              const ready = mounted;
-              const connected = ready && !!account && !!chain;
-
-              if (!connected) {
-                return (
-                  <Button
-                    onClick={openConnectModal}
-                    isLoading={isLoading}
-                    className="text-[14px] font-bold px-8 py-5 rounded-full border border-[#1A1A1A] bg-white text-[#1A1A1A] hover:bg-[#A9FD5F] hover:scale-[1.03] transition-all flex items-center shadow-none hover:shadow-none"
-                  >
-                    Connect Wallet
-                  </Button>
-                );
-              }
-
-              return (
-                <div className="flex items-center gap-2">
-                  <Button
-                    onClick={openChainModal}
-                    variant="outline"
-                    className="text-[13px] font-bold px-6 py-4 rounded-full border-2 border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A]/5 transition-colors hidden sm:flex"
-                  >
-                    {chain.name}
-                  </Button>
-                  <Button
-                    onClick={openAccountModal}
-                    className="text-[13px] font-bold px-6 py-4 rounded-full bg-[#1A1A1A] text-white hover:bg-[#1A1A1A]/90 transition-colors shadow-lg"
-                  >
-                    {account.displayName}
-                  </Button>
-                </div>
-              );
-            }}
-          </ConnectButton.Custom>
+          <ConnectWallet />
         </div>
       </nav>
 

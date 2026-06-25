@@ -1,237 +1,299 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { Card } from "@/components/Cards";
-import { Badge, Button } from "@/components/UI";
-import { Search, Activity, TrendingUp, Clock, Ban } from "lucide-react";
-import { useWallet } from "@/context/WalletContext";
-import { apiGet } from "@/lib/api";
-import { useToast } from "@/context/ToastContext";
-import { validaContractAbi } from "@/lib/contractAbi";
-import { getContractWithSigner, getFrontendContractAddress } from "@/lib/ethers";
+import { Card, StatCard } from "@/components/Cards";
+import { Badge, Button, EmptyState } from "@/components/UI";
+import { FormInput } from "@/components/Forms";
+import { useValidaProgram } from "@/hooks/useValidaProgram";
+import { useAnchorWallet } from "@solana/wallet-adapter-react";
+import { BN } from "@coral-xyz/anchor";
+import { SystemProgram } from "@solana/web3.js";
+import { fetchConfig, fetchAllPatches, type PatchAccount } from "@/lib/solana/valida";
+import { configPda, patchPda } from "@/lib/solana/pdas";
+import { explorerTx } from "@/lib/solana/constants";
+import { sha256OfBytes, uploadFileToIPFS, storageBackend } from "@/lib/solana/ipfs";
+import { Package, CheckCircle2, Clock, RefreshCw, ExternalLink, AlertTriangle, ShieldCheck, Upload, FileUp, Hash, Database } from "lucide-react";
 
-type Patch = {
-    _id: string;
-    patchId: number;
-    softwareName: string;
-    version: string;
-    publisher: string;
-    active: boolean;
-    releaseTime: string;
-    installCount: number;
-    successRate: number;
+type PublishPhase = "idle" | "hashing" | "uploading" | "committing";
+
+const PHASE_LABEL: Record<PublishPhase, string> = {
+  idle: "",
+  hashing: "Computing SHA-256 of the patch file…",
+  uploading: "Pinning the patch file to IPFS…",
+  committing: "Committing { CID, hash } on Solana devnet…",
 };
 
 export default function AdminPatches() {
-    const { address } = useWallet();
-    const { showToast } = useToast();
-    const [filter, setFilter] = useState("all");
-    const [search, setSearch] = useState("");
-    const [patches, setPatches] = useState<Patch[]>([]);
-    const [disablingPatchId, setDisablingPatchId] = useState<number | null>(null);
+  const { program } = useValidaProgram();
+  const anchorWallet = useAnchorWallet();
+  const fileRef = useRef<HTMLInputElement>(null);
 
-    const fetchPatches = useCallback(async () => {
-        if (!address) return;
-        const data = await apiGet("/api/admin/patches", address);
-        setPatches(((data as { patches?: Patch[] }).patches || []));
-    }, [address]);
+  const [patches, setPatches] = useState<PatchAccount[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [tx, setTx] = useState<{ action: string; sig: string } | null>(null);
+  const [busy, setBusy] = useState<string | null>(null);
+  const [phase, setPhase] = useState<PublishPhase>("idle");
 
-    useEffect(() => {
-        let cancelled = false;
-        async function load() {
-            if (!address) return;
-            const data = await apiGet("/api/admin/patches", address);
-            if (!cancelled) {
-                setPatches(((data as { patches?: Patch[] }).patches || []));
-            }
-        }
-        void load();
-        return () => { cancelled = true; };
-    }, [address]);
+  const [form, setForm] = useState({ softwareName: "", version: "" });
+  const [file, setFile] = useState<File | null>(null);
+  const [fileHashHex, setFileHashHex] = useState<string | null>(null);
 
-    async function handleDisablePatch(patch: Patch) {
-        if (!address || disablingPatchId !== null || !patch.active) return;
-        setDisablingPatchId(patch.patchId);
-        try {
-            const contractAddress = getFrontendContractAddress();
-            const contract = await getContractWithSigner(contractAddress, validaContractAbi);
-            const tx = await contract.disablePatch(patch.patchId);
-            await tx.wait();
+  const backend = storageBackend();
 
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-            const response = await fetch(`${baseUrl}/api/admin/disable-patch`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "x-wallet-address": address
-                },
-                body: JSON.stringify({ patchId: patch.patchId })
-            });
-            const payload = (await response.json()) as { error?: string };
-            if (!response.ok) {
-                throw new Error(payload.error || "Failed to sync patch disable");
-            }
-
-            showToast(`Patch #${patch.patchId} disabled and synced`, "success");
-            await fetchPatches();
-        } catch (error) {
-            showToast(error instanceof Error ? error.message : "Disable patch failed", "error");
-        } finally {
-            setDisablingPatchId(null);
-        }
+  const load = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const config = await fetchConfig(program);
+      if (!config) {
+        setError("Program not initialized.");
+        return;
+      }
+      setPatches(await fetchAllPatches(program, Number(config.patchCount)));
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to load patches.");
+    } finally {
+      setIsLoading(false);
     }
+  }, [program]);
 
-    const filteredPatches = useMemo(() => patches.filter((p) => {
-        if (filter === "all") return true;
-        if (filter === "active") return p.active;
-        if (filter === "disabled") return !p.active;
-        return true;
-    }).filter((p) => {
-        if (!search.trim()) return true;
-        const q = search.toLowerCase();
-        return p.softwareName.toLowerCase().includes(q) || String(p.patchId).includes(q);
-    }), [patches, filter, search]);
+  useEffect(() => {
+    void load();
+  }, [load]);
 
-    return (
-        <DashboardLayout>
-            <div className="flex flex-col gap-8">
-                {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                    <div className="space-y-2">
-                        <h1 className="text-4xl font-black text-[#1A1A1A] leading-tight tracking-tight">Patch Inventory</h1>
-                        <p className="text-[#1A1A1A]/70 font-medium">Verify software integrity and manage patch distribution across the fleet.</p>
-                    </div>
-                    <div className="flex gap-4">
-                        <div className="relative group">
-                            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1A1A1A]/50 group-focus-within:text-[#1A1A1A] transition-colors" />
-                            <input
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                placeholder="Search by ID or software..."
-                                className="bg-white border border-[#1A1A1A]/5 rounded-xl px-12 py-3 text-sm focus:outline-none focus:border-[#1A1A1A]/30 w-full md:w-80 transition-all"
-                            />
-                        </div>
-                    </div>
+  const set = (f: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setForm((p) => ({ ...p, [f]: e.target.value }));
+
+  const onPickFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const picked = e.target.files?.[0] ?? null;
+    setFile(picked);
+    setFileHashHex(null);
+    if (!picked) return;
+    // Hash immediately so the presenter can show the integrity hash before publishing.
+    const { hex } = await sha256OfBytes(await picked.arrayBuffer());
+    setFileHashHex(hex);
+  };
+
+  const handlePublish = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!anchorWallet) {
+      alert("Connect the admin wallet first.");
+      return;
+    }
+    if (!form.softwareName.trim() || !form.version.trim()) {
+      setError("Software name and version are required.");
+      return;
+    }
+    if (!file) {
+      setError("Select the patch file to publish — its SHA-256 is what gets committed on-chain.");
+      return;
+    }
+    setBusy("publish");
+    setError(null);
+    try {
+      const config = await fetchConfig(program);
+      if (!config) throw new Error("Program not initialized.");
+      const patchId = Number(config.patchCount);
+
+      // 1. SHA-256 the real file bytes — this is the on-chain integrity hash.
+      setPhase("hashing");
+      const buffer = await file.arrayBuffer();
+      const { bytes, hex } = await sha256OfBytes(buffer);
+      setFileHashHex(hex);
+
+      // 2. Store the file on IPFS (Pinata when configured, local content store otherwise).
+      setPhase("uploading");
+      const { cid } = await uploadFileToIPFS(file);
+
+      // 3. Commit { ipfs_cid, file_hash } on Solana devnet — a real transaction.
+      setPhase("committing");
+      const sig = await program.methods
+        .publishPatch(form.softwareName.trim(), form.version.trim(), cid, bytes)
+        .accountsPartial({ patch: patchPda(patchId), config: configPda(), admin: anchorWallet.publicKey, systemProgram: SystemProgram.programId })
+        .rpc();
+
+      setTx({ action: `publish patch #${patchId} (${form.softwareName.trim()} ${form.version.trim()})`, sig });
+      setForm({ softwareName: "", version: "" });
+      setFile(null);
+      setFileHashHex(null);
+      if (fileRef.current) fileRef.current.value = "";
+      await load();
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Publish failed.");
+    } finally {
+      setBusy(null);
+      setPhase("idle");
+    }
+  };
+
+  const handleVerify = async (patchId: number) => {
+    if (!anchorWallet) {
+      alert("Connect the admin wallet first.");
+      return;
+    }
+    setBusy(`verify-${patchId}`);
+    try {
+      const sig = await program.methods
+        .verifyPatch(new BN(patchId))
+        .accountsPartial({ patch: patchPda(patchId), config: configPda(), admin: anchorWallet.publicKey })
+        .rpc();
+      setTx({ action: `verify patch #${patchId}`, sig });
+      await load();
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Verify failed.");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const verified = patches.filter((p) => p.isVerified).length;
+
+  return (
+    <DashboardLayout>
+      <div className="flex flex-col gap-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-black text-[#1A1A1A] leading-tight tracking-tight">Patch Publishing</h1>
+            <p className="text-[#1A1A1A]/70 font-medium">BPMS layer — store the patch file on IPFS and commit its SHA-256 hash on Solana devnet. Devices verify that hash before installing.</p>
+          </div>
+          <Button variant="outline" onClick={() => void load()} className="gap-2">
+            <RefreshCw size={15} /> Refresh
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <StatCard icon={Package} label="Total Patches" value={patches.length} />
+          <StatCard icon={ShieldCheck} label="Verified" value={verified} trendType="up" />
+          <StatCard icon={Clock} label="Awaiting Verification" value={patches.length - verified} />
+        </div>
+
+        {tx && (
+          <div className="flex items-center gap-4 p-4 bg-[#A9FD5F]/20 rounded-xl border border-[#A9FD5F]">
+            <CheckCircle2 size={18} className="text-[#1A1A1A] shrink-0" />
+            <p className="text-sm font-bold text-[#1A1A1A] flex-1">Confirmed on Solana devnet: {tx.action}</p>
+            <a href={explorerTx(tx.sig)} target="_blank" rel="noreferrer" className="text-xs font-mono text-[#1A1A1A]/60 flex items-center gap-1 hover:underline">
+              {tx.sig.slice(0, 20)}... <ExternalLink size={11} />
+            </a>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-1">
+            <Card title="Publish Patch" subtitle="File → IPFS → hash on-chain">
+              <form onSubmit={(e) => void handlePublish(e)} className="space-y-4">
+                <FormInput label="Software Name" placeholder="e.g. OpenSSL" value={form.softwareName} onChange={set("softwareName")} data-testid="patch-software" />
+                <FormInput label="Version" placeholder="e.g. 3.1.0" value={form.version} onChange={set("version")} data-testid="patch-version" />
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]/50">Patch File</label>
+                  <button
+                    type="button"
+                    onClick={() => fileRef.current?.click()}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl border border-dashed border-[#1A1A1A]/20 bg-[#EDEDED] hover:bg-[#A9FD5F]/20 transition-colors text-left"
+                    data-testid="patch-file-btn"
+                  >
+                    <FileUp size={18} className="text-[#1A1A1A]/60 shrink-0" />
+                    <span className="text-sm font-medium text-[#1A1A1A] truncate">
+                      {file ? `${file.name} (${(file.size / 1024).toFixed(1)} KB)` : "Choose the patch binary / package…"}
+                    </span>
+                  </button>
+                  <input ref={fileRef} type="file" className="hidden" onChange={(e) => void onPickFile(e)} data-testid="patch-file" />
                 </div>
 
-                {/* Global Patch Stats */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    {[
-                        { label: "Active Deployments", value: patches.filter((p) => p.active).length, color: "text-[#1A1A1A]", icon: Activity },
-                        { label: "Disabled Patches", value: patches.filter((p) => !p.active).length, color: "text-rose-500", icon: Ban },
-                        {
-                            label: "Avg. Success",
-                            value: `${patches.length ? Math.round(patches.reduce((acc, p) => acc + p.successRate, 0) / patches.length) : 0}%`,
-                            color: "text-blue-500",
-                            icon: TrendingUp
-                        },
-                        {
-                            label: "New Release",
-                            value: patches[0] ? new Date(patches[0].releaseTime).toLocaleDateString() : "-",
-                            color: "text-amber-500",
-                            icon: Clock
-                        },
-                    ].map((stat, i) => (
-                        <div key={i} className="glass p-5 rounded-2xl border border-[#1A1A1A]/5 flex items-center justify-between">
-                            <div>
-                                <p className="text-[10px] uppercase font-bold text-[#1A1A1A]/50 tracking-wider mb-2">{stat.label}</p>
-                                <p className={`text-2xl font-black ${stat.color}`}>{stat.value}</p>
+                {fileHashHex && (
+                  <div className="space-y-1.5">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]/50 flex items-center gap-1">
+                      <Hash size={11} /> SHA-256 (to be committed on-chain)
+                    </p>
+                    <code className="block text-[10px] font-mono text-[#1A1A1A] break-all bg-[#EDEDED] rounded-lg p-2" data-testid="patch-computed-hash">
+                      {fileHashHex}
+                    </code>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-2 text-[11px] font-bold text-[#1A1A1A]/50">
+                  <Database size={12} />
+                  Storage backend: <span className="text-[#1A1A1A]">{backend}</span>
+                </div>
+
+                {error && (
+                  <div className="flex items-center gap-2 p-3 bg-rose-50 rounded-lg border border-rose-200">
+                    <AlertTriangle size={14} className="text-rose-600 shrink-0" />
+                    <p className="text-xs text-rose-700">{error}</p>
+                  </div>
+                )}
+
+                {phase !== "idle" && (
+                  <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="h-3.5 w-3.5 rounded-full border-2 border-blue-500 border-t-transparent animate-spin shrink-0" />
+                    <p className="text-xs text-blue-700 font-medium">{PHASE_LABEL[phase]}</p>
+                  </div>
+                )}
+
+                <Button type="submit" variant="primary" isLoading={busy === "publish"} className="w-full gap-2" data-testid="patch-publish">
+                  <Upload size={15} /> Publish Patch On-Chain
+                </Button>
+              </form>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-2">
+            <Card title="On-Chain Patches" subtitle="All patches anchored in the program">
+              {isLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="h-10 w-10 rounded-full border-4 border-[#A9FD5F] border-t-transparent animate-spin" />
+                </div>
+              ) : patches.length === 0 ? (
+                <EmptyState icon={Package} title="No patches yet" description="Publish your first patch using the form." />
+              ) : (
+                <div className="table-container">
+                  <table className="w-full">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Software / Version</th>
+                        <th>IPFS CID</th>
+                        <th>Status</th>
+                        <th className="text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {patches.map((p) => (
+                        <tr key={p.patchId} className="group hover:bg-white/1" data-testid={`patch-${p.patchId}`}>
+                          <td className="font-mono text-[#1A1A1A] text-xs font-bold">#{p.patchId}</td>
+                          <td>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-bold text-[#1A1A1A]">{p.softwareName}</span>
+                              <span className="text-[10px] text-[#1A1A1A]/50 font-bold uppercase tracking-widest mt-0.5">Build {p.version}</span>
                             </div>
-                            <div className="p-3 bg-white rounded-xl text-[#1A1A1A]/70">
-                                <stat.icon size={20} />
-                            </div>
-                        </div>
-                    ))}
+                          </td>
+                          <td className="text-xs font-mono text-[#1A1A1A]/60">{p.ipfsCid.slice(0, 18)}…</td>
+                          <td>
+                            {p.isVerified ? <Badge variant="success">VERIFIED</Badge> : <Badge variant="neutral">UNVERIFIED</Badge>}
+                          </td>
+                          <td className="text-right">
+                            {p.isVerified ? (
+                              <span className="text-xs text-emerald-600 font-bold flex items-center gap-1 justify-end">
+                                <CheckCircle2 size={12} /> Safe to distribute
+                              </span>
+                            ) : (
+                              <Button variant="secondary" size="sm" isLoading={busy === `verify-${p.patchId}`} onClick={() => void handleVerify(p.patchId)} data-testid={`verify-patch-${p.patchId}`}>
+                                Verify
+                              </Button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-
-                {/* Filtering Tabs */}
-                <div className="flex items-center gap-1 bg-[#1A1A1A]/20 w-fit p-1 rounded-xl border border-[#1A1A1A]/5">
-                    {[
-                        { label: "All Software", id: "all" },
-                        { label: "Active Only", id: "active" },
-                        { label: "Disabled", id: "disabled" },
-                    ].map((tab) => (
-                        <button
-                            key={tab.id}
-                            onClick={() => setFilter(tab.id)}
-                            className={`px-6 py-2 rounded-lg text-xs font-bold transition-all ${filter === tab.id ? "bg-white text-[#1A1A1A] shadow-lg shadow-emerald-500/10" : "text-[#1A1A1A]/50 hover:text-[#1A1A1A]/80"}`}
-                        >
-                            {tab.label}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Advanced Patches Table */}
-                <Card>
-                    <div className="table-container">
-                        <table className="w-full">
-                            <thead>
-                                <tr>
-                                    <th>Patch ID</th>
-                                    <th>Software & Version</th>
-                                    <th>Publisher Address</th>
-                                    <th>Distribution Status</th>
-                                    <th>Total Installs / Success Rate</th>
-                                    <th className="text-right">Deployment Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {filteredPatches.map((patch) => (
-                                    <tr key={patch._id} className="group hover:bg-white/1">
-                                        <td className="font-mono text-[#1A1A1A] text-xs font-bold">
-                                            #P00{patch.patchId}
-                                        </td>
-                                        <td>
-                                            <div className="flex flex-col">
-                                                <span className="text-sm font-bold text-[#1A1A1A] tracking-tight">{patch.softwareName}</span>
-                                                <span className="text-[10px] text-[#1A1A1A]/50 font-bold uppercase tracking-widest mt-0.5">Build {patch.version}</span>
-                                            </div>
-                                        </td>
-                                        <td className="text-xs font-mono text-[#1A1A1A]/70">
-                                            {patch.publisher.slice(0, 10)}...{patch.publisher.slice(-8)}
-                                        </td>
-                                        <td>
-                                            <div className="flex items-center gap-2">
-                                                <div className={`h-1.5 w-1.5 rounded-full ${patch.active ? "bg-emerald-500 animate-pulse" : "bg-rose-500"}`} />
-                                                <span className={`text-[11px] font-bold uppercase tracking-wider ${patch.active ? "text-[#1A1A1A]" : "text-rose-500"}`}>
-                                                    {patch.active ? "Global Distribution" : "Halted & Revoked"}
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="flex flex-col gap-1">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-xs font-bold text-[#1A1A1A]/80">{patch.installCount} Nodes</span>
-                                                    <span className="text-[10px] font-bold text-[#1A1A1A]">{patch.successRate}% OK</span>
-                                                </div>
-                                                <div className="w-24 h-1.5 bg-[#EDEDED] rounded-full overflow-hidden">
-                                                    <div className="h-full bg-emerald-500" style={{ width: `${patch.successRate}%` }} />
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="text-right">
-                                            {patch.active ? (
-                                                <Button
-                                                    variant="danger"
-                                                    className="min-w-28"
-                                                    isLoading={disablingPatchId === patch.patchId}
-                                                    disabled={disablingPatchId !== null && disablingPatchId !== patch.patchId}
-                                                    onClick={() => void handleDisablePatch(patch)}
-                                                >
-                                                    Disable
-                                                </Button>
-                                            ) : (
-                                                <Badge variant="error">disabled</Badge>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </Card>
-            </div>
-        </DashboardLayout>
-    );
+              )}
+            </Card>
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
 }

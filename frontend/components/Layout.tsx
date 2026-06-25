@@ -6,14 +6,9 @@ import { usePathname } from "next/navigation";
 import { useWallet } from "@/context/WalletContext";
 import {
     LayoutDashboard,
-    ShieldCheck,
-    Users,
-    Settings,
-    History,
     Package,
     PlusCircle,
     BarChart3,
-    Cpu,
     LogOut,
     ChevronLeft,
     ChevronRight,
@@ -21,11 +16,11 @@ import {
     Wallet,
     Zap,
     ShieldAlert,
+    ShieldCheck,
     Bug,
     Wrench,
-    UserCheck,
     Coins,
-    Fingerprint,
+    ListChecks,
 } from "lucide-react";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -44,15 +39,11 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen }: { isMobileOpen: boole
             case "admin":
                 return [
                     { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
-                    { icon: History, label: "Requests", href: "/admin/requests" },
-                    { icon: Cpu, label: "Devices", href: "/admin/devices" },
-                    { icon: Users, label: "Publishers", href: "/admin/publishers" },
-                    { icon: Package, label: "Patches", href: "/admin/patches" },
                     { icon: ShieldAlert, label: "Vulnerabilities", href: "/admin/vulnerabilities" },
+                    { icon: Package, label: "Patch Publishing", href: "/admin/patches" },
+                    { icon: ShieldCheck, label: "Device Verify", href: "/verify-install" },
                     { icon: Coins, label: "Escrow", href: "/admin/escrow" },
-                    { icon: Fingerprint, label: "ZK Proofs", href: "/admin/zk-proofs" },
-                    { icon: History, label: "Audit Logs", href: "/admin/logs" },
-                    { icon: Settings, label: "Settings", href: "/admin/settings" },
+                    { icon: ListChecks, label: "Demo Walkthrough", href: "/demo-walkthrough" },
                 ];
             case "publisher":
                 return [
@@ -72,8 +63,6 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen }: { isMobileOpen: boole
                     { icon: LayoutDashboard, label: "Dashboard", href: "/auditor/dashboard" },
                     { icon: Bug, label: "Submit Vulnerability", href: "/auditor/submit" },
                     { icon: Wrench, label: "Submit Fix", href: "/auditor/submit-fix" },
-                    { icon: Zap, label: "Generate ZK Proof", href: "/auditor/generate-proof" },
-                    { icon: UserCheck, label: "Registration", href: "/auditor/register" },
                 ];
             default:
                 return [];

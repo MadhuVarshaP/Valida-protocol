@@ -1,235 +1,230 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { StatCard, Card } from "@/components/Cards";
-import { Badge } from "@/components/UI";
+import { Badge, Button } from "@/components/UI";
 import {
-    Package,
-    Cpu,
-    CheckCircle2,
-    XCircle,
-    TrendingUp,
-    Activity,
-    Clock
+  Package,
+  ShieldAlert,
+  CheckCircle2,
+  Rocket,
+  TrendingUp,
+  RefreshCw,
+  Coins,
 } from "lucide-react";
-import { useWallet } from "@/context/WalletContext";
-import { apiGet } from "@/lib/api";
 import Link from "next/link";
+import { useValidaProgram } from "@/hooks/useValidaProgram";
+import { useConnection } from "@solana/wallet-adapter-react";
+import { fetchConfig, type SubmissionAccount, type ProgramConfigAccount } from "@/lib/solana/valida";
+import { fetchAllSubmissions } from "@/lib/solana/valida";
+import { configPda } from "@/lib/solana/pdas";
+import {
+  STATUS_LABELS,
+  STATUS_BADGE_VARIANTS,
+  TEMPLATE_TYPES,
+  LAMPORTS_PER_SOL,
+  PROGRAM_ID,
+  explorerAddress,
+  CLUSTER,
+} from "@/lib/solana/constants";
+import { ExternalLink } from "lucide-react";
 
-type Metrics = {
-    totalPatches: number;
-    activeDevices: number;
-    totalLogs: number;
-    successLogs: number;
-    successRate: number;
-};
+function templateLabel(t: number) {
+  return TEMPLATE_TYPES.find((x) => x.value === t)?.label ?? `Type ${t}`;
+}
 
-type InstallationLog = {
-    _id: string;
-    deviceAddress: string;
-    patchId: number;
-    status: "success" | "failure";
-    timestamp: string;
-};
+function ConfigRow({ label, value, href }: { label: string; value: string; href: string }) {
+  return (
+    <div>
+      <p className="text-[10px] font-bold uppercase tracking-wider text-[#1A1A1A]/40 mb-1">{label}</p>
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className="flex items-center gap-2 p-2 bg-[#EDEDED] rounded-lg hover:bg-[#A9FD5F]/30 transition-colors group"
+      >
+        <code className="text-[11px] font-mono text-[#1A1A1A] break-all flex-1">{value}</code>
+        <ExternalLink size={12} className="shrink-0 text-[#1A1A1A]/40 group-hover:text-[#1A1A1A]" />
+      </a>
+    </div>
+  );
+}
 
-type PatchMeta = {
-    _id: string;
-    patchId: number;
-    softwareName: string;
-    version: string;
-    releaseTime: string;
-};
+function ConfigStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="p-2 bg-[#EDEDED] rounded-lg text-center">
+      <p className="text-[9px] font-bold uppercase tracking-wider text-[#1A1A1A]/40">{label}</p>
+      <p className="text-sm font-black text-[#1A1A1A] mt-0.5">{value}</p>
+    </div>
+  );
+}
 
 export default function AdminDashboard() {
-    const { address } = useWallet();
-    const [metrics, setMetrics] = useState<Metrics | null>(null);
-    const [logs, setLogs] = useState<InstallationLog[]>([]);
-    const [patches, setPatches] = useState<PatchMeta[]>([]);
+  const { program } = useValidaProgram();
+  const { connection } = useConnection();
+  const [subs, setSubs] = useState<SubmissionAccount[]>([]);
+  const [config, setConfig] = useState<ProgramConfigAccount | null>(null);
+  const [configError, setConfigError] = useState<string | null>(null);
+  const [treasury, setTreasury] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        if (!address) return;
-        let cancelled = false;
+  const patchCount = config ? Number(config.patchCount) : 0;
 
-        async function load() {
-            const [metricsRes, logsRes, patchesRes] = await Promise.all([
-                apiGet("/api/admin/metrics", address),
-                apiGet("/api/admin/logs?limit=6", address),
-                apiGet("/api/admin/patches", address),
-            ]);
+  const load = useCallback(async () => {
+    setIsLoading(true);
+    setConfigError(null);
+    try {
+      const cfg = await fetchConfig(program);
+      setConfig(cfg);
+      if (!cfg) {
+        setConfigError("ProgramConfig not found — the program is not initialized on this cluster.");
+        return;
+      }
+      setSubs((await fetchAllSubmissions(program, Number(cfg.submissionCount))).reverse());
+      setTreasury(await connection.getBalance(configPda()));
+    } catch (err: unknown) {
+      setConfigError(err instanceof Error ? err.message : "Failed to read ProgramConfig.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [program, connection]);
 
-            if (cancelled) return;
-            setMetrics(metricsRes as Metrics);
-            setLogs(((logsRes as { logs?: InstallationLog[] }).logs || []));
-            setPatches(((patchesRes as { patches?: PatchMeta[] }).patches || []));
-        }
+  useEffect(() => {
+    void load();
+  }, [load]);
 
-        void load();
-        return () => {
-            cancelled = true;
-        };
-    }, [address]);
+  const published = subs.filter((s) => s.status === 6).length;
+  const verified = subs.filter((s) => s.status >= 1 && s.status !== 2).length;
+  const recent = subs.slice(0, 6);
 
-    const totalPatches = metrics?.totalPatches ?? 0;
-    const activeDevices = metrics?.activeDevices ?? 0;
-    const successfulInstalls = metrics?.successLogs ?? 0;
-    const failedInstalls = Math.max((metrics?.totalLogs ?? 0) - successfulInstalls, 0);
-    const complianceRate = Math.round((metrics?.successRate ?? 0) * 100);
-    const totalEvents = metrics?.totalLogs ?? 0;
-    const failureRate = totalEvents === 0 ? 0 : Math.round((failedInstalls / totalEvents) * 100);
-    const latestPatch = patches[0]
-        ? `${patches[0].softwareName} v${patches[0].version}`
-        : "—";
-    const patchById = new Map(patches.map((p) => [p.patchId, p]));
+  return (
+    <DashboardLayout>
+      <div className="flex flex-col gap-8">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-4xl font-black tracking-tight text-[#1A1A1A]/90">System Overview</h1>
+            <p className="text-[#1A1A1A]/70 font-medium">Valida Protocol on Solana devnet — vulnerability disclosure and patch integrity.</p>
+          </div>
+          <Button variant="outline" onClick={() => void load()} className="gap-2">
+            <RefreshCw size={15} /> Refresh
+          </Button>
+        </div>
 
-    return (
-        <DashboardLayout>
-            <div className="flex flex-col gap-8">
-                {/* Page Header */}
-                <div className="flex flex-col gap-2">
-                    <h1 className="text-4xl font-black tracking-tight text-[#1A1A1A]/90">System Overview</h1>
-                    <p className="text-[#1A1A1A]/70 font-medium">Global patch management and infrastructure health summary.</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          <StatCard icon={ShieldAlert} label="Submissions" value={subs.length} />
+          <StatCard icon={CheckCircle2} label="Verified+" value={verified} trendType="up" />
+          <StatCard icon={Rocket} label="Published" value={published} trendType="up" />
+          <StatCard icon={Package} label="Patches" value={patchCount} />
+          <StatCard icon={Coins} label="Treasury (SOL)" value={(treasury / LAMPORTS_PER_SOL).toFixed(3)} />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <Card title="Recent Submissions" subtitle="Latest vulnerability reports on-chain">
+              {isLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="h-10 w-10 rounded-full border-4 border-[#A9FD5F] border-t-transparent animate-spin" />
                 </div>
-
-                {/* Stat Cards Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-                    <StatCard
-                        icon={Package}
-                        label="Total Patches"
-                        value={totalPatches}
-                    />
-                    <StatCard
-                        icon={Cpu}
-                        label="Active Devices"
-                        value={activeDevices}
-                    />
-                    <StatCard
-                        icon={CheckCircle2}
-                        label="Successful Installs"
-                        value={successfulInstalls}
-                        trendType="up"
-                    />
-                    <StatCard
-                        icon={XCircle}
-                        label="Failed Installs"
-                        value={failedInstalls}
-                        trendType="down"
-                    />
-                    <StatCard
-                        icon={TrendingUp}
-                        label="Compliance Rate"
-                        value={`${complianceRate}%`}
-                    />
+              ) : recent.length === 0 ? (
+                <div className="py-10 text-center text-sm text-[#1A1A1A]/50">No submissions yet.</div>
+              ) : (
+                <div className="table-container">
+                  <table className="w-full">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Software</th>
+                        <th>Auditor</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {recent.map((s) => (
+                        <tr key={s.submissionId} className="group hover:bg-white/2">
+                          <td className="font-bold font-mono text-[#1A1A1A]">#{s.submissionId}</td>
+                          <td className="text-sm text-[#1A1A1A]/70">{templateLabel(s.templateType)}</td>
+                          <td className="text-sm font-semibold text-[#1A1A1A]">{s.affectedSoftware} <span className="font-mono text-xs text-[#1A1A1A]/50">v{s.affectedVersion}</span></td>
+                          <td className="text-xs font-mono text-[#1A1A1A]/50">{s.auditor.slice(0, 6)}...{s.auditor.slice(-4)}</td>
+                          <td>
+                            <Badge variant={STATUS_BADGE_VARIANTS[s.status] as "success" | "warning" | "error" | "info" | "neutral"}>
+                              {STATUS_LABELS[s.status]}
+                            </Badge>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
+              )}
+            </Card>
+          </div>
 
-                {/* Main Dashboard Content */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Recent Activity Table */}
-                    <div className="lg:col-span-2">
-                        <Card title="Recent Network Activity" subtitle="Live feed of patch deployments across the network.">
-                            <div className="table-container">
-                                <table className="w-full">
-                                    <thead>
-                                        <tr>
-                                            <th>Event Type</th>
-                                            <th>Patch</th>
-                                            <th>Device Address</th>
-                                            <th>Status</th>
-                                            <th>Timestamp</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {logs.map((log) => (
-                                            <tr key={log._id} className="group hover:bg-white/2">
-                                                <td className="font-semibold text-[#1A1A1A]/80">
-                                                    <div className="flex items-center gap-2">
-                                                        <Activity size={14} className="text-[#1A1A1A]" />
-                                                        Patch Installation
-                                                    </div>
-                                                </td>
-                                                <td className="text-sm text-[#1A1A1A]/80">
-                                                    <div className="flex flex-col">
-                                                        <span className="font-semibold">
-                                                            {patchById.get(log.patchId)?.softwareName || `Patch #${log.patchId}`}
-                                                        </span>
-                                                        <span className="text-[10px] text-[#1A1A1A]/50 font-mono">
-                                                            v{patchById.get(log.patchId)?.version || "unknown"} · #P00{log.patchId}
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td className="text-sm text-[#1A1A1A]/50 font-mono">
-                                                    {log.deviceAddress.slice(0, 6)}...{log.deviceAddress.slice(-4)}
-                                                </td>
-                                                <td>
-                                                    <Badge variant={log.status === "success" ? "success" : "error"}>
-                                                        {log.status}
-                                                    </Badge>
-                                                </td>
-                                                <td className="text-xs text-[#1A1A1A]/50">
-                                                    <div className="flex items-center gap-1">
-                                                        <Clock size={12} />
-                                                        {new Date(log.timestamp).toLocaleString()}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </Card>
+          <div className="flex flex-col gap-6">
+            <Card title="On-chain Program Config" subtitle="Live read from the deployed program account">
+              {isLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="h-8 w-8 rounded-full border-4 border-[#A9FD5F] border-t-transparent animate-spin" />
+                </div>
+              ) : configError ? (
+                <p className="text-sm text-rose-600 py-4">{configError}</p>
+              ) : config ? (
+                <div className="space-y-3" data-testid="program-config">
+                  <ConfigRow
+                    label="Program ID"
+                    value={PROGRAM_ID.toBase58()}
+                    href={explorerAddress(PROGRAM_ID.toBase58())}
+                  />
+                  <ConfigRow
+                    label="Config PDA"
+                    value={configPda().toBase58()}
+                    href={explorerAddress(configPda().toBase58())}
+                  />
+                  <ConfigRow
+                    label="On-chain Admin"
+                    value={config.admin.toBase58()}
+                    href={explorerAddress(config.admin.toBase58())}
+                  />
+                  <div className="grid grid-cols-3 gap-2">
+                    <ConfigStat label="Required Stake" value={`${Number(config.requiredStake) / LAMPORTS_PER_SOL} SOL`} />
+                    <ConfigStat label="Submissions" value={config.submissionCount.toString()} />
+                    <ConfigStat label="Patches" value={config.patchCount.toString()} />
+                  </div>
+                  <div className="flex items-center gap-2 pt-1">
+                    <span className="h-2 w-2 rounded-full bg-[#A9FD5F] animate-pulse" />
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#1A1A1A]/50">
+                      Solana {CLUSTER} · live
+                    </span>
+                  </div>
+                </div>
+              ) : null}
+            </Card>
+
+            <Card title="Workflow Shortcuts" subtitle="Jump to the action you need">
+              <div className="space-y-3">
+                {[
+                  { href: "/admin/vulnerabilities", label: "Vulnerability Portal", desc: "Verify, bounty, resolve, publish", icon: ShieldAlert },
+                  { href: "/admin/patches", label: "Patch Inventory", desc: "Publish + verify patches", icon: Package },
+                  { href: "/admin/escrow", label: "Escrow & Treasury", desc: "Stakes and payouts", icon: Coins },
+                ].map((l) => (
+                  <Link key={l.href} href={l.href}>
+                    <div className="glass p-4 rounded-2xl border border-emerald-500/10 flex items-center justify-between group cursor-pointer hover:bg-[#A9FD5F]/30 transition-all">
+                      <div>
+                        <h4 className="font-bold text-[#1A1A1A] tracking-tight">{l.label}</h4>
+                        <p className="text-xs text-[#1A1A1A]/50 mt-1 font-medium">{l.desc}</p>
+                      </div>
+                      <div className="bg-[#A9FD5F] w-10 h-10 rounded-xl flex items-center justify-center text-[#1A1A1A] group-hover:scale-110 transition-transform">
+                        <l.icon size={18} />
+                      </div>
                     </div>
-
-                    {/* Right Panel: Health Summary */}
-                    <div className="flex flex-col gap-6">
-                        <Card title="System Health" className="border-[#1A1A1A]/10 shadow-emerald-500/5">
-                            <div className="space-y-6">
-                                <div className="space-y-3">
-                                    <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-[#1A1A1A]/50">
-                                        <span>Installation Success Rate</span>
-                                        <span className="text-[#1A1A1A]">{complianceRate}%</span>
-                                    </div>
-                                    <div className="h-2 w-full bg-[#EDEDED] rounded-full overflow-hidden">
-                                        <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${complianceRate}%` }} />
-                                    </div>
-                                </div>
-
-                                <div className="space-y-3">
-                                    <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-[#1A1A1A]/50">
-                                        <span>Installation Failure Rate</span>
-                                        <span className="text-blue-500">{failureRate}%</span>
-                                    </div>
-                                    <div className="h-2 w-full bg-[#EDEDED] rounded-full overflow-hidden">
-                                        <div className="h-full bg-blue-500 rounded-full" style={{ width: `${failureRate}%` }} />
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[#1A1A1A]/5">
-                                    <div className="p-3 bg-white rounded-xl">
-                                        <p className="text-[10px] uppercase font-bold text-[#1A1A1A]/50 tracking-wider">Latest Patch</p>
-                                        <p className="text-sm font-bold mt-1 text-[#1A1A1A]">{latestPatch}</p>
-                                    </div>
-                                    <div className="p-3 bg-white rounded-xl">
-                                        <p className="text-[10px] uppercase font-bold text-[#1A1A1A]/70 tracking-wider">Total Events</p>
-                                        <p className="text-sm font-bold mt-1 text-[#1A1A1A]">{totalEvents}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </Card>
-
-                        <Link href="/admin/logs">
-                            <div className="glass p-6 rounded-2xl border border-emerald-500/10 flex items-center justify-between group cursor-pointer hover:bg-[#A9FD5F]/30 transition-all">
-                                <div>
-                                    <h4 className="font-bold text-[#1A1A1A] tracking-tight">Generate Audit Report</h4>
-                                    <p className="text-xs text-[#1A1A1A]/50 mt-1 font-medium">Open logs page and export CSV.</p>
-                                </div>
-                                <div className="bg-[#A9FD5F] w-10 h-10 rounded-xl flex items-center justify-center text-[#1A1A1A] group-hover:scale-110 transition-transform">
-                                    <TrendingUp size={18} />
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        </DashboardLayout>
-    );
+                  </Link>
+                ))}
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </DashboardLayout>
+  );
 }

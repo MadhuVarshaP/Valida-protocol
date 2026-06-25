@@ -1,9 +1,20 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAccount, useDisconnect } from "wagmi";
-import { BrowserProvider, Contract } from "ethers";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { useRouter, usePathname } from "next/navigation";
+import {
+  useAnchorWallet,
+  useConnection,
+  useWallet as useSolanaWallet,
+} from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { getProgram, getReadonlyProgram, fetchConfig } from "@/lib/solana/valida";
 
 type Role = "admin" | "publisher" | "device" | "auditor" | "unauthorized" | null;
 
@@ -20,107 +31,114 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export function WalletProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { address, isConnected, isConnecting, isReconnecting } = useAccount();
-  const { disconnect } = useDisconnect();
+  const pathname = usePathname();
+  const { connection } = useConnection();
+  const anchorWallet = useAnchorWallet();
+  const { connected, connecting, disconnect } = useSolanaWallet();
+  const { setVisible } = useWalletModal();
+
   const [role, setRole] = useState<Role>(null);
   const [isRoleLoading, setIsRoleLoading] = useState(false);
+  // Grace window so the wallet-adapter autoConnect can run before any "not
+  // connected" route guard fires (prevents a flash-redirect to home on refresh).
+  const [authChecked, setAuthChecked] = useState(false);
 
-  const normalizedAddress = useMemo(
-    () => (address ? address.toLowerCase() : null),
-    [address]
+  useEffect(() => {
+    const t = setTimeout(() => setAuthChecked(true), 2000);
+    return () => clearTimeout(t);
+  }, []);
+  useEffect(() => {
+    if (connected) setAuthChecked(true);
+  }, [connected]);
+
+  const address = useMemo(
+    () => anchorWallet?.publicKey.toBase58() ?? null,
+    [anchorWallet]
   );
 
-  const connectWallet = () => {
-    // RainbowKit ConnectButton handles modal opening
-  };
+  const connectWallet = () => setVisible(true);
 
   const disconnectWallet = () => {
-    disconnect();
+    void disconnect();
     setRole(null);
     router.push("/");
   };
 
+  // Resolve role from on-chain config: config.admin → admin, otherwise auditor.
   useEffect(() => {
-    let isCancelled = false;
+    let cancelled = false;
 
     async function resolveRole() {
-      if (!normalizedAddress) {
+      if (!address) {
         setRole(null);
         return;
       }
-
       setIsRoleLoading(true);
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-        const response = await fetch(`${baseUrl}/api/user/role/${normalizedAddress}`, {
-          cache: "no-store"
-        });
+        const program = anchorWallet
+          ? getProgram(anchorWallet, connection)
+          : getReadonlyProgram(connection);
 
-        if (!response.ok) {
-          if (!isCancelled) setRole("unauthorized");
-          return;
-        }
-
-        const data = (await response.json()) as { role?: Role; status?: string };
-        let detectedRole: Role =
-          data.status === "active" &&
-          (data.role === "admin" || data.role === "publisher" || data.role === "device" || data.role === "auditor")
-            ? data.role
-            : "unauthorized";
-
-        // If backend doesn't know this wallet, check on-chain for auditor registration
-        if (detectedRole === "unauthorized") {
-          const vulnAddr = process.env.NEXT_PUBLIC_VULN_CONTRACT_ADDRESS;
-          if (vulnAddr && typeof window !== "undefined") {
-            try {
-              const eth = (window as unknown as { ethereum?: object }).ethereum;
-              if (eth) {
-                const provider = new BrowserProvider(eth as Parameters<typeof BrowserProvider>[0]);
-                const contract = new Contract(
-                  vulnAddr,
-                  ["function registeredAuditors(address) view returns (bool)"],
-                  provider
-                );
-                const isAuditor = await contract.registeredAuditors(normalizedAddress) as boolean;
-                if (isAuditor) detectedRole = "auditor";
-              }
-            } catch { /* on-chain check is best-effort */ }
+        // Retry: a transient RPC failure must not downgrade an admin to auditor
+        // (which would bounce them off /admin/* via the route guard).
+        let config = null;
+        let lastErr: unknown = null;
+        for (let i = 0; i < 5; i++) {
+          try {
+            config = await fetchConfig(program);
+            lastErr = null;
+            break;
+          } catch (e) {
+            lastErr = e;
+            await new Promise((r) => setTimeout(r, 800 * (i + 1)));
           }
         }
+        if (lastErr) throw lastErr;
 
-        if (!isCancelled) setRole(detectedRole);
+        let detected: Role = "auditor";
+        if (config && config.admin.toBase58() === address) detected = "admin";
+        // If config doesn't exist yet, the first connector is treated as the
+        // prospective admin so they can initialize the program.
+        if (!config) detected = "admin";
+
+        if (!cancelled) setRole(detected);
       } catch {
-        if (!isCancelled) setRole("unauthorized");
+        // Could not read config after retries — keep the wallet unrouted rather
+        // than forcing a role that would trigger a wrong-page redirect.
+        if (!cancelled) setRole(null);
       } finally {
-        if (!isCancelled) setIsRoleLoading(false);
+        if (!cancelled) setIsRoleLoading(false);
       }
     }
 
     void resolveRole();
-    return () => { isCancelled = true; };
-  }, [normalizedAddress]);
+    return () => {
+      cancelled = true;
+    };
+  }, [address, anchorWallet, connection]);
 
+  // Route to the role dashboard once connected — but only from the landing
+  // page, so navigating directly to a role route (or between role pages) is
+  // not hijacked back to the dashboard.
   useEffect(() => {
-    if (!isConnected || isRoleLoading || !role) return;
-
+    if (!connected || isRoleLoading || !role) return;
+    if (pathname !== "/") return;
     if (role === "admin") router.push("/admin/dashboard");
-    else if (role === "publisher") router.push("/publisher/dashboard");
-    else if (role === "device") router.push("/device/dashboard");
     else if (role === "auditor") router.push("/auditor/dashboard");
     else router.push("/unauthorized");
-  }, [isConnected, isRoleLoading, role, router]);
+  }, [connected, isRoleLoading, role, router, pathname]);
 
-  const isLoading = isConnecting || isReconnecting || isRoleLoading;
+  const isLoading = !authChecked || connecting || isRoleLoading;
 
   return (
     <WalletContext.Provider
       value={{
-        address: normalizedAddress,
+        address,
         role,
         isLoading,
         connectWallet,
         disconnectWallet,
-        isConnected
+        isConnected: connected,
       }}
     >
       {children}

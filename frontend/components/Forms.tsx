@@ -82,6 +82,7 @@ export const FormInput = ({
     onChange,
     type = "text",
     error,
+    "data-testid": dataTestId,
 }: {
     label: string;
     placeholder?: string;
@@ -89,6 +90,7 @@ export const FormInput = ({
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     type?: string;
     error?: string;
+    "data-testid"?: string;
 }) => {
     return (
         <div className="space-y-2">
@@ -98,6 +100,7 @@ export const FormInput = ({
                 placeholder={placeholder}
                 value={value}
                 onChange={onChange}
+                data-testid={dataTestId}
                 className={cn(
                     "w-full bg-white border border-[#1A1A1A]/10 rounded-xl px-4 py-3 text-[#1A1A1A] placeholder:text-[#1A1A1A]/50 focus:outline-none focus:border-[#1A1A1A]/30 transition-all",
                     error && "border-rose-500"

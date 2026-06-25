@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Outfit, DM_Sans } from "next/font/google";
 import "./globals.css";
-import "@rainbow-me/rainbowkit/styles.css";
 import { WalletProvider } from "@/context/WalletContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { Web3Provider } from "@/context/Web3Provider";

@@ -48,3 +48,7 @@ yarn-error.log*
 *.pem
 coverage/
 .vercel
+
+# ── Devnet test keypairs (private keys — never commit) ────────────────────────
+.test-auditor.json
+**/.test-auditor.json
