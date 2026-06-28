@@ -6,10 +6,10 @@ import { Card } from "@/components/Cards";
 import { Button, Badge, EmptyState } from "@/components/UI";
 import { LifecycleTimeline } from "@/components/LifecycleTimeline";
 import { useWallet } from "@/context/WalletContext";
-import { useValidaProgram } from "@/hooks/useValidaProgram";
+import { useZyraProgram } from "@/hooks/useZyraProgram";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { BN } from "@coral-xyz/anchor";
-import { fetchConfig, fetchAllSubmissions, type SubmissionAccount } from "@/lib/solana/valida";
+import { fetchConfig, fetchAllSubmissions, type SubmissionAccount } from "@/lib/solana/zyra";
 import { vulnPda } from "@/lib/solana/pdas";
 import { generateSalt, computeCommitmentHex, computeCommitmentBytes } from "@/lib/solana/commitment";
 import { TEMPLATE_TYPES, explorerTx } from "@/lib/solana/constants";
@@ -49,7 +49,7 @@ type EligibleSubmission = SubmissionAccount & { alreadyCommitted: boolean };
 
 export default function AuditorSubmitFixPage() {
   const { address } = useWallet();
-  const { program } = useValidaProgram();
+  const { program } = useZyraProgram();
   const anchorWallet = useAnchorWallet();
 
   const [eligible, setEligible] = useState<EligibleSubmission[]>([]);

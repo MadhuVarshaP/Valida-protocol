@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-interface IValidaVulnerabilityEscrow {
+interface IZyraVulnerabilityEscrow {
     // Slim 3-value getter used by escrow — avoids stack-too-deep from the 13-value getSubmission()
     function getSubmissionStatus(uint256 submissionId) external view returns (
         uint8 status, bool bountyPaid, bool fixIncentivePaid
@@ -11,13 +11,13 @@ interface IValidaVulnerabilityEscrow {
 }
 
 /**
- * @title ValidaEscrow
- * @notice Manages staking and incentive payments for the Valida vulnerability platform.
- *         Incentive #1 (bounty) is only releasable when ValidaVulnerability status = Verified (1).
- *         Incentive #2 (fix)   is only releasable when ValidaVulnerability status = FixVerified (5).
+ * @title ZyraEscrow
+ * @notice Manages staking and incentive payments for the Zyra vulnerability platform.
+ *         Incentive #1 (bounty) is only releasable when ZyraVulnerability status = Verified (1).
+ *         Incentive #2 (fix)   is only releasable when ZyraVulnerability status = FixVerified (5).
  *         These are hard contract rules enforced by require() — no override is possible.
  */
-contract ValidaEscrow {
+contract ZyraEscrow {
 
     /* ------------------------------------------------------------ */
     /* REENTRANCY GUARD                                             */
@@ -36,7 +36,7 @@ contract ValidaEscrow {
     /* ------------------------------------------------------------ */
 
     address public admin;
-    address public validaVulnerabilityContract;
+    address public zyraVulnerabilityContract;
     uint256 public requiredStake;
     uint256 public bountyPool;
 
@@ -82,9 +82,9 @@ contract ValidaEscrow {
     /* CONSTRUCTOR                                                  */
     /* ------------------------------------------------------------ */
 
-    constructor(address _validaVulnerabilityContract, uint256 _requiredStake) {
+    constructor(address _zyraVulnerabilityContract, uint256 _requiredStake) {
         admin = msg.sender;
-        validaVulnerabilityContract = _validaVulnerabilityContract;
+        zyraVulnerabilityContract = _zyraVulnerabilityContract;
         requiredStake = _requiredStake;
     }
 
@@ -103,7 +103,7 @@ contract ValidaEscrow {
 
     /**
      * @notice Auditor stakes ETH before/with vulnerability submission.
-     *         Call this before submitVulnerability() on ValidaVulnerability.
+     *         Call this before submitVulnerability() on ZyraVulnerability.
      *         Use current submissionCount + 1 as the expected submissionId.
      */
     function stake(uint256 submissionId) external payable {
@@ -131,7 +131,7 @@ contract ValidaEscrow {
     /* ------------------------------------------------------------ */
 
     function setBountyAmount(uint256 submissionId, uint256 amount) external onlyAdmin {
-        IValidaVulnerabilityEscrow vuln = IValidaVulnerabilityEscrow(validaVulnerabilityContract);
+        IZyraVulnerabilityEscrow vuln = IZyraVulnerabilityEscrow(zyraVulnerabilityContract);
         (uint8 status, , ) = vuln.getSubmissionStatus(submissionId);
         require(status == 1, "Submission must be Verified");
         require(escrowRecords[submissionId].auditor != address(0), "No escrow record");
@@ -144,7 +144,7 @@ contract ValidaEscrow {
      *         HARD RULE: status must equal Verified (1). No override.
      */
     function releaseBounty(uint256 submissionId) external onlyAdmin nonReentrant {
-        IValidaVulnerabilityEscrow vuln = IValidaVulnerabilityEscrow(validaVulnerabilityContract);
+        IZyraVulnerabilityEscrow vuln = IZyraVulnerabilityEscrow(zyraVulnerabilityContract);
         (uint8 status, bool bountyPaid, ) = vuln.getSubmissionStatus(submissionId);
 
         // HARD RULE enforced by require - cannot be bypassed
@@ -180,7 +180,7 @@ contract ValidaEscrow {
     /* ------------------------------------------------------------ */
 
     function setFixIncentiveAmount(uint256 submissionId, uint256 amount) external onlyAdmin {
-        IValidaVulnerabilityEscrow vuln = IValidaVulnerabilityEscrow(validaVulnerabilityContract);
+        IZyraVulnerabilityEscrow vuln = IZyraVulnerabilityEscrow(zyraVulnerabilityContract);
         (uint8 status, , ) = vuln.getSubmissionStatus(submissionId);
         require(status == 4, "Submission must be FixInProgress");
         require(escrowRecords[submissionId].auditor != address(0), "No escrow record");
@@ -193,7 +193,7 @@ contract ValidaEscrow {
      *         HARD RULE: status must equal FixVerified (5). No override.
      */
     function releaseFixIncentive(uint256 submissionId) external onlyAdmin nonReentrant {
-        IValidaVulnerabilityEscrow vuln = IValidaVulnerabilityEscrow(validaVulnerabilityContract);
+        IZyraVulnerabilityEscrow vuln = IZyraVulnerabilityEscrow(zyraVulnerabilityContract);
         (uint8 status, , bool fixIncentivePaid) = vuln.getSubmissionStatus(submissionId);
 
         // HARD RULE enforced by require - cannot be bypassed
@@ -240,7 +240,7 @@ contract ValidaEscrow {
      * @notice Slashes stake for rejected submissions (status = Rejected).
      */
     function slash(uint256 submissionId) external onlyAdmin nonReentrant {
-        IValidaVulnerabilityEscrow vuln = IValidaVulnerabilityEscrow(validaVulnerabilityContract);
+        IZyraVulnerabilityEscrow vuln = IZyraVulnerabilityEscrow(zyraVulnerabilityContract);
         (uint8 status, , ) = vuln.getSubmissionStatus(submissionId);
         require(status == 2, "Submission must be Rejected");
 
@@ -257,11 +257,11 @@ contract ValidaEscrow {
     }
 
     /**
-     * @notice Auto-slash triggered by ValidaVulnerability when fraud is detected (Phase 3).
+     * @notice Auto-slash triggered by ZyraVulnerability when fraud is detected (Phase 3).
      *         Does not require a specific status - callable only by the linked vuln contract.
      */
     function fraudSlash(uint256 submissionId) external nonReentrant {
-        require(msg.sender == validaVulnerabilityContract, "Only ValidaVulnerability can call fraudSlash");
+        require(msg.sender == zyraVulnerabilityContract, "Only ZyraVulnerability can call fraudSlash");
 
         EscrowRecord storage record = escrowRecords[submissionId];
         if (record.auditor == address(0) || record.slashed) return; // no record or already slashed

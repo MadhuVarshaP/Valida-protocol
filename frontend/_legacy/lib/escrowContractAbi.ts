@@ -2,7 +2,7 @@ export const escrowContractAbi = [
 	{ "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
 	{
 		"inputs": [
-			{ "internalType": "address", "name": "_validaVulnerabilityContract", "type": "address" },
+			{ "internalType": "address", "name": "_zyraVulnerabilityContract", "type": "address" },
 			{ "internalType": "uint256", "name": "_requiredStake", "type": "uint256" }
 		],
 		"stateMutability": "nonpayable",
@@ -110,7 +110,7 @@ export const escrowContractAbi = [
 	},
 	{
 		"inputs": [],
-		"name": "validaVulnerabilityContract",
+		"name": "zyraVulnerabilityContract",
 		"outputs": [{ "internalType": "address", "name": "", "type": "address" }],
 		"stateMutability": "view",
 		"type": "function"
@@ -132,7 +132,7 @@ export const escrowContractAbi = [
 					{ "internalType": "bool", "name": "slashed", "type": "bool" },
 					{ "internalType": "bool", "name": "fixIncentiveSkipped", "type": "bool" }
 				],
-				"internalType": "struct ValidaEscrow.EscrowRecord",
+				"internalType": "struct ZyraEscrow.EscrowRecord",
 				"name": "",
 				"type": "tuple"
 			}

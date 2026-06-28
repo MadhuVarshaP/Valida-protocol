@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend API for Valida Protocol",
+  "description": "Backend API for Zyra Protocol",
   "main": "server.js",
   "type": "commonjs",
   "scripts": {

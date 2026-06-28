@@ -16,13 +16,13 @@ interface ITemplateVerifier {
     ) external view returns (bool);
 }
 
-interface IValidaVulnerabilityZK {
+interface IZyraVulnerabilityZK {
     function getSubmissionCommitment(uint256 submissionId) external view returns (bytes32);
     function markZKVerified(uint256 submissionId) external;
 }
 
 /**
- * @title ValidaZKVerifier
+ * @title ZyraZKVerifier
  * @notice Verifies Groth16 ZK proofs for vulnerability submissions.
  *         Uses a TemplateRegistry so new vulnerability type circuits can be added
  *         without changing core logic.
@@ -34,16 +34,16 @@ interface IValidaVulnerabilityZK {
  *           [3] = commitmentHash     (Poseidon(exploitInput, salt))
  *
  *         The commitmentHash in [3] MUST match the on-chain commitment from
- *         ValidaVulnerability.submissions[submissionId].commitment — enforced by require().
+ *         ZyraVulnerability.submissions[submissionId].commitment — enforced by require().
  */
-contract ValidaZKVerifier {
+contract ZyraZKVerifier {
 
     /* ------------------------------------------------------------ */
     /* STATE                                                        */
     /* ------------------------------------------------------------ */
 
     address public admin;
-    address public validaVulnerability;
+    address public zyraVulnerability;
 
     // TemplateRegistry: templateId → verifier contract address
     // templateId 1 = AuthBypass (only template in Phase 4)
@@ -87,9 +87,9 @@ contract ValidaZKVerifier {
     /* CONSTRUCTOR                                                  */
     /* ------------------------------------------------------------ */
 
-    constructor(address _validaVulnerability) {
+    constructor(address _zyraVulnerability) {
         admin = msg.sender;
-        validaVulnerability = _validaVulnerability;
+        zyraVulnerability = _zyraVulnerability;
     }
 
     /* ------------------------------------------------------------ */
@@ -115,7 +115,7 @@ contract ValidaZKVerifier {
      *         If the proof verifies on-chain AND the commitmentHash matches the
      *         on-chain commitment, the submission is auto-advanced to Verified status.
      *
-     * @param submissionId  The ValidaVulnerability submission to verify
+     * @param submissionId  The ZyraVulnerability submission to verify
      * @param a             Proof component A (from SnarkJS groth16.exportSolidityCallData)
      * @param b             Proof component B
      * @param c             Proof component C
@@ -141,7 +141,7 @@ contract ValidaZKVerifier {
         // 2. Cross-check: commitmentHash (public signal[3]) must match on-chain commitment
         //    Auditor must have submitted their vulnerability with Poseidon(exploitInput, salt)
         //    as the commitment — this is enforced here cryptographically.
-        bytes32 onChainCommitment = IValidaVulnerabilityZK(validaVulnerability)
+        bytes32 onChainCommitment = IZyraVulnerabilityZK(zyraVulnerability)
             .getSubmissionCommitment(submissionId);
         require(
             bytes32(publicSignals[3]) == onChainCommitment,
@@ -161,8 +161,8 @@ contract ValidaZKVerifier {
             verifiedAt: block.timestamp
         });
 
-        // 4. Auto-advance submission to Verified on ValidaVulnerability
-        IValidaVulnerabilityZK(validaVulnerability).markZKVerified(submissionId);
+        // 4. Auto-advance submission to Verified on ZyraVulnerability
+        IZyraVulnerabilityZK(zyraVulnerability).markZKVerified(submissionId);
 
         emit ZKProofVerified(submissionId, msg.sender, templateType);
     }

@@ -21,7 +21,7 @@ const app = express();
 const defaultAllowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
-  "https://valida-protocol.vercel.app"
+  "https://zyra-protocol.vercel.app"
 ];
 const configuredAllowedOrigins = String(process.env.CORS_ALLOWED_ORIGINS || "")
   .split(",")
@@ -47,7 +47,7 @@ function isOriginAllowed(origin) {
   }
 
   // Safe fallback for your deployed frontend + preview URLs.
-  return /^https:\/\/valida-frontend(?:-[a-z0-9-]+)?\.vercel\.app$/i.test(origin);
+  return /^https:\/\/zyra-frontend(?:-[a-z0-9-]+)?\.vercel\.app$/i.test(origin);
 }
 
 const corsOptions = {
@@ -112,7 +112,7 @@ async function bootstrap() {
   }
 
   app.listen(PORT, () => {
-    logger.info(`Valida Protocol backend listening on port ${PORT}`);
+    logger.info(`Zyra Protocol backend listening on port ${PORT}`);
   });
 }
 

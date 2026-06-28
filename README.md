@@ -1,8 +1,8 @@
-# Valida Protocol
+# Zyra Protocol
 
 **Decentralized patch management and on-chain vulnerability disclosure — built on Solana.**
 
-Valida Protocol is a two-phase system for securing software distribution and rewarding security researchers:
+Zyra Protocol is a two-phase system for securing software distribution and rewarding security researchers:
 
 - **Phase 1 — Patch Management** (originally shipped on Base Sepolia EVM) — publishers anchor software patches on-chain with SHA-256 integrity proofs; devices verify hashes before applying updates.
 - **Phase 2 — Vulnerability Discovery + ZK** (now shipped on Solana Devnet via Anchor) — auditors submit cryptographic commitments to vulnerabilities, collect bounties for finding bugs, reveal full details on-chain, and earn a second incentive for fixing them. ZK circuits let auditors prove vulnerability knowledge without disclosing exploitable details prematurely.
@@ -14,15 +14,15 @@ Valida Protocol is a two-phase system for securing software distribution and rew
 ```
 Phase 1 — Base Sepolia (EVM)           Phase 2 — Solana Devnet (Anchor)
 ─────────────────────────────          ──────────────────────────────────────
-ValidaProtocol.sol                     programs/valida  (this repo, /solana)
+ZyraProtocol.sol                     programs/zyra  (this repo, /solana)
   ├─ Publisher registration            ├─ stake_and_submit       (Step 2+3)
   ├─ Patch publishing + IPFS CID       ├─ verify_submission       (Step 4)
   ├─ Device registration               ├─ release_bounty          (Step 5 ★)
   └─ On-chain hash verification        ├─ reveal_and_verify       (Step 6)
                                        ├─ decide_resolution       (Step 7)
-ValidaVulnerability.sol                ├─ submit_fix_commitment   (Step 8B)
-ValidaEscrow.sol                       ├─ verify_fix              (Step 9a)
-ValidaZKVerifier.sol                   ├─ release_fix_incentive   (Step 9b ★)
+ZyraVulnerability.sol                ├─ submit_fix_commitment   (Step 8B)
+ZyraEscrow.sol                       ├─ verify_fix              (Step 9a)
+ZyraZKVerifier.sol                   ├─ release_fix_incentive   (Step 9b ★)
 AuthBypassVerifier.sol (Groth16)       ├─ mark_published          (Step 10)
 AuthBypass.circom (Poseidon)           └─ publish_patch           (Step 10)
 
@@ -37,26 +37,26 @@ The EVM contracts remain in `/contract` for reference; the **Solana program is t
 ## Repository Structure
 
 ```
-valida-protocol/
+zyra-protocol/
 │
 ├── solana/                          ← PRIMARY: Anchor program (Solana Devnet)
-│   ├── programs/valida/src/
+│   ├── programs/zyra/src/
 │   │   ├── lib.rs                   Program entry, all 14 on-chain events
 │   │   ├── state.rs                 5 account structs with space calculations
-│   │   ├── errors.rs                ValidaError — 12 typed error codes
+│   │   ├── errors.rs                ZyraError — 12 typed error codes
 │   │   └── instructions/
 │   │       ├── patch.rs             initialize, publish_patch, verify_patch
 │   │       └── vulnerability.rs     Full 12-step workflow (Steps 2–10)
-│   ├── tests/valida.ts              TypeScript tests — 7 scenarios
+│   ├── tests/zyra.ts              TypeScript tests — 7 scenarios
 │   ├── scripts/deploy.sh            Devnet deployment script
 │   ├── Anchor.toml
 │   └── README.md                    Solana-specific docs
 │
 ├── contract/                        EVM contracts (Phase 1, Base Sepolia)
-│   ├── valida.sol                   ValidaProtocol — patch management
-│   ├── ValidaVulnerability.sol      Vulnerability lifecycle (EVM mirror)
-│   ├── ValidaEscrow.sol             Staking + bounty payments (EVM)
-│   ├── ValidaZKVerifier.sol         ZK proof routing (EVM)
+│   ├── zyra.sol                   ZyraProtocol — patch management
+│   ├── ZyraVulnerability.sol      Vulnerability lifecycle (EVM mirror)
+│   ├── ZyraEscrow.sol             Staking + bounty payments (EVM)
+│   ├── ZyraZKVerifier.sol         ZK proof routing (EVM)
 │   └── AuthBypassVerifier.sol       Groth16 verifier (auto-generated)
 │
 ├── circuits/
@@ -89,8 +89,8 @@ valida-protocol/
 | **Program ID** | `8ndCjxUiatZDPJjxe22cwTSUALHWbfT88Pn2Up18yfLe` |
 | **Network** | Solana Devnet |
 | **Framework** | Anchor 0.30.0 |
-| **Build status** | Compiled — `target/deploy/valida.so` (315 KB) |
-| **IDL** | `solana/target/idl/valida.json` |
+| **Build status** | Compiled — `target/deploy/zyra.so` (315 KB) |
+| **IDL** | `solana/target/idl/zyra.json` |
 | **Explorer** | [View on Solana Explorer](https://explorer.solana.com/address/8ndCjxUiatZDPJjxe22cwTSUALHWbfT88Pn2Up18yfLe?cluster=devnet) *(live after deploy)* |
 
 > **Deployment pending** — deployer wallet needs ~3 SOL from [faucet.solana.com](https://faucet.solana.com). Once funded: `cd solana && anchor deploy --provider.cluster devnet`
@@ -195,7 +195,7 @@ Constraints    : Poseidon(vulnerability_hash, salt) === commitment
                  severity_level >= severity_threshold
 ```
 
-The on-chain `ValidaZKVerifier.sol` routes proofs to per-template Groth16 verifiers. Five templates are supported: `AuthBypass`, `HashMismatch`, `PrivilegeEscalation`, `ReplayAttack`, `LogicError`.
+The on-chain `ZyraZKVerifier.sol` routes proofs to per-template Groth16 verifiers. Five templates are supported: `AuthBypass`, `HashMismatch`, `PrivilegeEscalation`, `ReplayAttack`, `LogicError`.
 
 ---
 
@@ -205,10 +205,10 @@ The original patch management contracts were deployed on **Base Sepolia** testne
 
 | Contract | Address |
 |---|---|
-| `ValidaProtocol` | `0x75A2609ADB4999d37Da288079fF900BAAaf69A0c` |
-| `ValidaVulnerability` | `0x28eE8cD0d0406a54074e41b27E22E5Cb92999090` |
-| `ValidaEscrow` | `0x36dC504Bd77C93d1Ae65828874d77aa1775a8A67` |
-| `ValidaZKVerifier` | `0x6D358d20190Dd33ec397ac3c61F5920126F92DB4` |
+| `ZyraProtocol` | `0x75A2609ADB4999d37Da288079fF900BAAaf69A0c` |
+| `ZyraVulnerability` | `0x28eE8cD0d0406a54074e41b27E22E5Cb92999090` |
+| `ZyraEscrow` | `0x36dC504Bd77C93d1Ae65828874d77aa1775a8A67` |
+| `ZyraZKVerifier` | `0x6D358d20190Dd33ec397ac3c61F5920126F92DB4` |
 | `AuthBypassVerifier` | `0x7451f4D6E4f1FCAA2A761723018487ddC278524a` |
 
 Explorer: `https://sepolia.basescan.org`
@@ -234,7 +234,7 @@ These contracts are now superseded by the Solana program for the vulnerability d
 ```bash
 cd solana
 yarn install
-anchor build           # compile + generate IDL → target/idl/valida.json
+anchor build           # compile + generate IDL → target/idl/zyra.json
 anchor test            # run all 7 test scenarios on localnet
 ```
 
@@ -272,7 +272,7 @@ cd solana
 anchor deploy --provider.cluster devnet
 
 # 3. After deploy — copy IDL to frontend
-cp target/idl/valida.json ../frontend/lib/validaIdl.json
+cp target/idl/zyra.json ../frontend/lib/zyraIdl.json
 ```
 
 ### Deploy EVM Contracts (optional, Base Sepolia)
@@ -325,4 +325,4 @@ git rm --cached frontend/.env backend/.env
 
 ---
 
-*Valida Protocol is in active development. All deployments are on testnets. Built for the Superteam Solana grant.*
+*Zyra Protocol is in active development. All deployments are on testnets. Built for the Superteam Solana grant.*

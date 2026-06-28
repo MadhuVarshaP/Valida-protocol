@@ -7,7 +7,7 @@ import { Badge, Button } from "@/components/UI";
 import { CheckCircle2, Clock3, XCircle } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
 import { useToast } from "@/context/ToastContext";
-import { validaContractAbi } from "@/lib/contractAbi";
+import { zyraContractAbi } from "@/lib/contractAbi";
 import { getContractWithSigner, getFrontendContractAddress } from "@/lib/ethers";
 
 type AccessRequest = {
@@ -127,7 +127,7 @@ export default function AdminRequestsPage() {
     setActionId(request._id);
     try {
       const contractAddress = getFrontendContractAddress();
-      const contract = await getContractWithSigner(contractAddress, validaContractAbi);
+      const contract = await getContractWithSigner(contractAddress, zyraContractAbi);
       if (request.requestedRole === "publisher") {
         const tx = await contract.authorizePublisher(request.walletAddress);
         await tx.wait();

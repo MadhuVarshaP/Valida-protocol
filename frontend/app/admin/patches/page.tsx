@@ -5,11 +5,11 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, StatCard } from "@/components/Cards";
 import { Badge, Button, EmptyState } from "@/components/UI";
 import { FormInput } from "@/components/Forms";
-import { useValidaProgram } from "@/hooks/useValidaProgram";
+import { useZyraProgram } from "@/hooks/useZyraProgram";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { BN } from "@coral-xyz/anchor";
 import { SystemProgram } from "@solana/web3.js";
-import { fetchConfig, fetchAllPatches, type PatchAccount } from "@/lib/solana/valida";
+import { fetchConfig, fetchAllPatches, type PatchAccount } from "@/lib/solana/zyra";
 import { configPda, patchPda } from "@/lib/solana/pdas";
 import { explorerTx } from "@/lib/solana/constants";
 import { sha256OfBytes, uploadFileToIPFS, storageBackend } from "@/lib/solana/ipfs";
@@ -25,7 +25,7 @@ const PHASE_LABEL: Record<PublishPhase, string> = {
 };
 
 export default function AdminPatches() {
-  const { program } = useValidaProgram();
+  const { program } = useZyraProgram();
   const anchorWallet = useAnchorWallet();
   const fileRef = useRef<HTMLInputElement>(null);
 

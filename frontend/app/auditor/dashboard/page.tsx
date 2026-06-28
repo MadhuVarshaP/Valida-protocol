@@ -6,10 +6,10 @@ import { Card, StatCard } from "@/components/Cards";
 import { Badge, Button, EmptyState } from "@/components/UI";
 import { LifecycleTimeline } from "@/components/LifecycleTimeline";
 import { useWallet } from "@/context/WalletContext";
-import { useValidaProgram } from "@/hooks/useValidaProgram";
+import { useZyraProgram } from "@/hooks/useZyraProgram";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { BN } from "@coral-xyz/anchor";
-import { fetchConfig, fetchAllSubmissions, type SubmissionAccount } from "@/lib/solana/valida";
+import { fetchConfig, fetchAllSubmissions, type SubmissionAccount } from "@/lib/solana/zyra";
 import { vulnPda } from "@/lib/solana/pdas";
 import {
   computeCommitmentHex,
@@ -56,7 +56,7 @@ type RevealState = {
 
 export default function AuditorDashboardPage() {
   const { address } = useWallet();
-  const { program } = useValidaProgram();
+  const { program } = useZyraProgram();
   const anchorWallet = useAnchorWallet();
 
   const [submissions, setSubmissions] = useState<SubmissionAccount[]>([]);
@@ -128,7 +128,7 @@ export default function AuditorDashboardPage() {
 
       setRevealState({ submissionId, phase: "revealing" });
       const saltBytes = Array.from(hexToBytes(json.salt));
-      const ipfsCid = `valida-reveal-${submissionId}`; // IPFS optional for the demo
+      const ipfsCid = `zyra-reveal-${submissionId}`; // IPFS optional for the demo
 
       const sig = await program.methods
         .revealAndVerify(new BN(submissionId), json.description, saltBytes, ipfsCid)

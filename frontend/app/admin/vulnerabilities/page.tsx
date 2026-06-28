@@ -5,7 +5,7 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, StatCard } from "@/components/Cards";
 import { Badge, Button, EmptyState } from "@/components/UI";
 import { LifecycleTimeline } from "@/components/LifecycleTimeline";
-import { useValidaProgram } from "@/hooks/useValidaProgram";
+import { useZyraProgram } from "@/hooks/useZyraProgram";
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import { BN } from "@coral-xyz/anchor";
 import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
@@ -15,7 +15,7 @@ import {
   fetchAllEscrows,
   type SubmissionAccount,
   type EscrowAccountView,
-} from "@/lib/solana/valida";
+} from "@/lib/solana/zyra";
 import { configPda, vulnPda, escrowPda } from "@/lib/solana/pdas";
 import {
   TEMPLATE_TYPES,
@@ -66,7 +66,7 @@ type TxFeedback = { submissionId: number; action: string; txHash: string } | nul
 type ActionLoading = { submissionId: number; action: string } | null;
 
 export default function AdminVulnerabilitiesPage() {
-  const { program } = useValidaProgram();
+  const { program } = useZyraProgram();
   const anchorWallet = useAnchorWallet();
   const { connection } = useConnection();
 

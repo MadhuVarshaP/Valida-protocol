@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 
-/** Deployed Valida program on Solana Devnet. */
+/** Deployed Zyra program on Solana Devnet. */
 export const PROGRAM_ID = new PublicKey(
   process.env.NEXT_PUBLIC_PROGRAM_ID ||
     "8ndCjxUiatZDPJjxe22cwTSUALHWbfT88Pn2Up18yfLe"

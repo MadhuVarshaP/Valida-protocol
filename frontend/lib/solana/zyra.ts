@@ -1,13 +1,13 @@
 import { AnchorProvider, Program } from "@coral-xyz/anchor";
 import { Connection, PublicKey, Keypair } from "@solana/web3.js";
-import type { Valida } from "./idl/valida-types";
-import idlJson from "./idl/valida.json";
+import type { Zyra } from "./idl/zyra-types";
+import idlJson from "./idl/zyra.json";
 import { RPC_ENDPOINT } from "./constants";
 import { configPda, vulnPda, escrowPda } from "./pdas";
 
-// Anchor's MethodsBuilder needs the IDL object at runtime; the Valida type
+// Anchor's MethodsBuilder needs the IDL object at runtime; the Zyra type
 // only provides compile-time shape.
-const IDL = idlJson as Valida;
+const IDL = idlJson as Zyra;
 
 export interface MinimalWallet {
   publicKey: PublicKey;
@@ -25,7 +25,7 @@ export function getConnection(): Connection {
 export function getProgram(
   wallet: MinimalWallet,
   connection: Connection = getConnection()
-): Program<Valida> {
+): Program<Zyra> {
   const provider = new AnchorProvider(connection, wallet as never, {
     commitment: "confirmed",
   });
@@ -35,7 +35,7 @@ export function getProgram(
 /** Read-only program for fetching accounts without a connected wallet. */
 export function getReadonlyProgram(
   connection: Connection = getConnection()
-): Program<Valida> {
+): Program<Zyra> {
   const dummy = Keypair.generate();
   const wallet: MinimalWallet = {
     publicKey: dummy.publicKey,
@@ -128,7 +128,7 @@ function toBig(x: any): bigint {
 }
 
 export async function fetchConfig(
-  program: Program<Valida>
+  program: Program<Zyra>
 ): Promise<ProgramConfigAccount | null> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const raw: any = await withRetry(() => (program.account as any).programConfig.fetchNullable(configPda()));
@@ -168,7 +168,7 @@ function parseSubmission(raw: any, pda: PublicKey): SubmissionAccount {
 }
 
 export async function fetchSubmission(
-  program: Program<Valida>,
+  program: Program<Zyra>,
   submissionId: number
 ): Promise<SubmissionAccount | null> {
   const pda = vulnPda(submissionId);
@@ -183,7 +183,7 @@ export async function fetchSubmission(
  * reliable on the public devnet endpoint than getProgramAccounts.
  */
 export async function fetchAllSubmissions(
-  program: Program<Valida>,
+  program: Program<Zyra>,
   count = 0
 ): Promise<SubmissionAccount[]> {
   if (!count) return [];
@@ -197,7 +197,7 @@ export async function fetchAllSubmissions(
 
 /** Escrow accounts 0..count-1, indexed by submission_id (one getMultipleAccounts request). */
 export async function fetchAllEscrows(
-  program: Program<Valida>,
+  program: Program<Zyra>,
   count = 0
 ): Promise<Record<number, EscrowAccountView>> {
   const out: Record<number, EscrowAccountView> = {};
@@ -223,7 +223,7 @@ export async function fetchAllEscrows(
 }
 
 export async function fetchEscrow(
-  program: Program<Valida>,
+  program: Program<Zyra>,
   submissionId: number
 ): Promise<EscrowAccountView | null> {
   const pda = escrowPda(submissionId);
@@ -244,7 +244,7 @@ export async function fetchEscrow(
 }
 
 export async function fetchPatch(
-  program: Program<Valida>,
+  program: Program<Zyra>,
   patchId: number
 ): Promise<PatchAccount | null> {
   const { patchPda } = await import("./pdas");
@@ -271,7 +271,7 @@ export async function fetchPatch(
  * pressure.
  */
 export async function fetchAllPatches(
-  program: Program<Valida>,
+  program: Program<Zyra>,
   count: number
 ): Promise<PatchAccount[]> {
   const ids = Array.from({ length: count }, (_, i) => i);

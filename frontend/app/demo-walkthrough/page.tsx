@@ -5,12 +5,12 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, StatCard } from "@/components/Cards";
 import { Badge, Button, EmptyState } from "@/components/UI";
 import { LifecycleTimeline } from "@/components/LifecycleTimeline";
-import { useValidaProgram } from "@/hooks/useValidaProgram";
+import { useZyraProgram } from "@/hooks/useZyraProgram";
 import {
   fetchConfig,
   fetchAllSubmissions,
   type SubmissionAccount,
-} from "@/lib/solana/valida";
+} from "@/lib/solana/zyra";
 import {
   STATUS_LABELS,
   STATUS_BADGE_VARIANTS,
@@ -52,7 +52,7 @@ const STEPS: StepDef[] = [
 ];
 
 export default function DemoWalkthroughPage() {
-  const { program } = useValidaProgram();
+  const { program } = useZyraProgram();
   const [submissions, setSubmissions] = useState<SubmissionAccount[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);

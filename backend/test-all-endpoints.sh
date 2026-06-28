@@ -1,5 +1,5 @@
 #!/bin/bash
-# Valida Protocol Backend - Complete Test Script
+# Zyra Protocol Backend - Complete Test Script
 # This script runs through all API endpoints to verify backend functionality.
 #
 # Prerequisites:
@@ -25,7 +25,7 @@ PUBLISHER_WALLET="0x8ba1f109551bd432803012645ac136ddd64dba72"
 DEVICE_WALLET="0x362b2e1e0e8b0c0af95cdcfdf7b6f37d0cf2db3a"
 
 echo -e "${BLUE}==================================================${NC}"
-echo -e "${BLUE}  Valida Protocol Backend - Complete API Test Suite${NC}"
+echo -e "${BLUE}  Zyra Protocol Backend - Complete API Test Suite${NC}"
 echo -e "${BLUE}==================================================${NC}\n"
 
 # Check if backend is running

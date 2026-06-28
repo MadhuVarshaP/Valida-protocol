@@ -36,7 +36,7 @@ function configPda() {
 (async () => {
   const connection = new Connection(RPC, "confirmed");
   const idl = JSON.parse(
-    fs.readFileSync(path.join(__dirname, "..", "lib", "solana", "idl", "valida.json"), "utf8")
+    fs.readFileSync(path.join(__dirname, "..", "lib", "solana", "idl", "zyra.json"), "utf8")
   );
   const dummy = Keypair.generate();
   const provider = new anchor.AnchorProvider(
@@ -61,7 +61,7 @@ function configPda() {
   // Inject burner identity + auto-select the burner wallet before any app code runs.
   await ctx.addInitScript(
     ([sk]) => {
-      window.localStorage.setItem("valida_burner_sk", JSON.stringify(sk));
+      window.localStorage.setItem("zyra_burner_sk", JSON.stringify(sk));
       window.localStorage.setItem("walletName", '"Burner (Devnet)"');
     },
     [AUDITOR_SK]

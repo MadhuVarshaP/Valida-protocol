@@ -1,20 +1,14 @@
-/**
- * Program IDL in camelCase format in order to be used in JS/TS.
- *
- * Note that this is only a type helper and is not the actual IDL. The original
- * IDL can be found at `target/idl/valida.json`.
- */
-export type Valida = {
+{
   "address": "8ndCjxUiatZDPJjxe22cwTSUALHWbfT88Pn2Up18yfLe",
   "metadata": {
-    "name": "valida",
+    "name": "zyra",
     "version": "0.1.0",
     "spec": "0.1.0",
-    "description": "Valida Protocol — Solana Anchor program for patch management and vulnerability disclosure"
+    "description": "Zyra Protocol — Solana Anchor program for patch management and vulnerability disclosure"
   },
   "instructions": [
     {
-      "name": "decideResolution",
+      "name": "decide_resolution",
       "discriminator": [
         244,
         55,
@@ -42,7 +36,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -72,11 +66,11 @@ export type Valida = {
       ],
       "args": [
         {
-          "name": "submissionId",
+          "name": "submission_id",
           "type": "u64"
         },
         {
-          "name": "auditorLed",
+          "name": "auditor_led",
           "type": "bool"
         }
       ]
@@ -119,19 +113,19 @@ export type Valida = {
           "signer": true
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "requiredStake",
+          "name": "required_stake",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "markPublished",
+      "name": "mark_published",
       "discriminator": [
         207,
         50,
@@ -159,7 +153,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -189,13 +183,13 @@ export type Valida = {
       ],
       "args": [
         {
-          "name": "submissionId",
+          "name": "submission_id",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "publishPatch",
+      "name": "publish_patch",
       "discriminator": [
         145,
         176,
@@ -225,7 +219,7 @@ export type Valida = {
               {
                 "kind": "account",
                 "path": "config.patch_count",
-                "account": "programConfig"
+                "account": "ProgramConfig"
               }
             ]
           }
@@ -255,13 +249,13 @@ export type Valida = {
           "signer": true
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "softwareName",
+          "name": "software_name",
           "type": "string"
         },
         {
@@ -269,11 +263,11 @@ export type Valida = {
           "type": "string"
         },
         {
-          "name": "ipfsCid",
+          "name": "ipfs_cid",
           "type": "string"
         },
         {
-          "name": "fileHash",
+          "name": "file_hash",
           "type": {
             "array": [
               "u8",
@@ -284,7 +278,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "rejectSubmission",
+      "name": "reject_submission",
       "discriminator": [
         2,
         92,
@@ -312,7 +306,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -335,7 +329,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -366,13 +360,13 @@ export type Valida = {
       ],
       "args": [
         {
-          "name": "submissionId",
+          "name": "submission_id",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "releaseBounty",
+      "name": "release_bounty",
       "discriminator": [
         208,
         104,
@@ -400,7 +394,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -423,7 +417,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -461,17 +455,17 @@ export type Valida = {
       ],
       "args": [
         {
-          "name": "submissionId",
+          "name": "submission_id",
           "type": "u64"
         },
         {
-          "name": "bountyAmount",
+          "name": "bounty_amount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "releaseFixIncentive",
+      "name": "release_fix_incentive",
       "discriminator": [
         148,
         210,
@@ -499,7 +493,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -522,7 +516,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -560,17 +554,17 @@ export type Valida = {
       ],
       "args": [
         {
-          "name": "submissionId",
+          "name": "submission_id",
           "type": "u64"
         },
         {
-          "name": "fixIncentiveAmount",
+          "name": "fix_incentive_amount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "revealAndVerify",
+      "name": "reveal_and_verify",
       "discriminator": [
         47,
         108,
@@ -598,7 +592,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -610,7 +604,7 @@ export type Valida = {
       ],
       "args": [
         {
-          "name": "submissionId",
+          "name": "submission_id",
           "type": "u64"
         },
         {
@@ -627,13 +621,13 @@ export type Valida = {
           }
         },
         {
-          "name": "revealedIpfsCid",
+          "name": "revealed_ipfs_cid",
           "type": "string"
         }
       ]
     },
     {
-      "name": "stakeAndSubmit",
+      "name": "stake_and_submit",
       "discriminator": [
         164,
         145,
@@ -662,7 +656,7 @@ export type Valida = {
               {
                 "kind": "account",
                 "path": "config.submission_count",
-                "account": "programConfig"
+                "account": "ProgramConfig"
               }
             ]
           }
@@ -686,13 +680,13 @@ export type Valida = {
               {
                 "kind": "account",
                 "path": "config.submission_count",
-                "account": "programConfig"
+                "account": "ProgramConfig"
               }
             ]
           }
         },
         {
-          "name": "usedNonce",
+          "name": "used_nonce",
           "writable": true,
           "pda": {
             "seeds": [
@@ -738,7 +732,7 @@ export type Valida = {
           "signer": true
         },
         {
-          "name": "systemProgram",
+          "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -753,7 +747,7 @@ export type Valida = {
           }
         },
         {
-          "name": "templateType",
+          "name": "template_type",
           "type": "u8"
         },
         {
@@ -761,11 +755,11 @@ export type Valida = {
           "type": "u8"
         },
         {
-          "name": "affectedSoftware",
+          "name": "affected_software",
           "type": "string"
         },
         {
-          "name": "affectedVersion",
+          "name": "affected_version",
           "type": "string"
         },
         {
@@ -773,7 +767,7 @@ export type Valida = {
           "type": "u64"
         },
         {
-          "name": "systemCodeHash",
+          "name": "system_code_hash",
           "type": {
             "array": [
               "u8",
@@ -782,13 +776,13 @@ export type Valida = {
           }
         },
         {
-          "name": "stakeAmount",
+          "name": "stake_amount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "submitFixCommitment",
+      "name": "submit_fix_commitment",
       "discriminator": [
         196,
         170,
@@ -816,7 +810,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -828,11 +822,11 @@ export type Valida = {
       ],
       "args": [
         {
-          "name": "submissionId",
+          "name": "submission_id",
           "type": "u64"
         },
         {
-          "name": "fixCommitment",
+          "name": "fix_commitment",
           "type": {
             "array": [
               "u8",
@@ -843,7 +837,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "verifyFix",
+      "name": "verify_fix",
       "discriminator": [
         114,
         48,
@@ -871,7 +865,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -901,13 +895,13 @@ export type Valida = {
       ],
       "args": [
         {
-          "name": "submissionId",
+          "name": "submission_id",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "verifyPatch",
+      "name": "verify_patch",
       "discriminator": [
         128,
         85,
@@ -936,7 +930,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "patchId"
+                "path": "patch_id"
               }
             ]
           }
@@ -966,13 +960,13 @@ export type Valida = {
       ],
       "args": [
         {
-          "name": "patchId",
+          "name": "patch_id",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "verifySubmission",
+      "name": "verify_submission",
       "discriminator": [
         162,
         234,
@@ -1000,7 +994,7 @@ export type Valida = {
               },
               {
                 "kind": "arg",
-                "path": "submissionId"
+                "path": "submission_id"
               }
             ]
           }
@@ -1030,7 +1024,7 @@ export type Valida = {
       ],
       "args": [
         {
-          "name": "submissionId",
+          "name": "submission_id",
           "type": "u64"
         }
       ]
@@ -1038,7 +1032,7 @@ export type Valida = {
   ],
   "accounts": [
     {
-      "name": "escrowAccount",
+      "name": "EscrowAccount",
       "discriminator": [
         36,
         69,
@@ -1051,7 +1045,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "patchRecord",
+      "name": "PatchRecord",
       "discriminator": [
         255,
         206,
@@ -1064,7 +1058,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "programConfig",
+      "name": "ProgramConfig",
       "discriminator": [
         196,
         210,
@@ -1077,7 +1071,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "usedNonce",
+      "name": "UsedNonce",
       "discriminator": [
         212,
         222,
@@ -1090,7 +1084,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "vulnerabilitySubmission",
+      "name": "VulnerabilitySubmission",
       "discriminator": [
         222,
         253,
@@ -1105,7 +1099,7 @@ export type Valida = {
   ],
   "events": [
     {
-      "name": "bountyReleased",
+      "name": "BountyReleased",
       "discriminator": [
         56,
         153,
@@ -1118,7 +1112,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "fixCommitmentSubmitted",
+      "name": "FixCommitmentSubmitted",
       "discriminator": [
         22,
         125,
@@ -1131,7 +1125,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "fixIncentiveReleased",
+      "name": "FixIncentiveReleased",
       "discriminator": [
         59,
         8,
@@ -1144,7 +1138,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "fixVerified",
+      "name": "FixVerified",
       "discriminator": [
         25,
         144,
@@ -1157,7 +1151,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "fraudDetected",
+      "name": "FraudDetected",
       "discriminator": [
         209,
         35,
@@ -1170,7 +1164,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "patchPublished",
+      "name": "PatchPublished",
       "discriminator": [
         218,
         212,
@@ -1183,7 +1177,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "patchPublishedForSubmission",
+      "name": "PatchPublishedForSubmission",
       "discriminator": [
         234,
         193,
@@ -1196,7 +1190,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "patchVerified",
+      "name": "PatchVerified",
       "discriminator": [
         162,
         118,
@@ -1209,7 +1203,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "programInitialized",
+      "name": "ProgramInitialized",
       "discriminator": [
         43,
         70,
@@ -1222,7 +1216,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "resolutionDecided",
+      "name": "ResolutionDecided",
       "discriminator": [
         26,
         66,
@@ -1235,7 +1229,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "submissionRejected",
+      "name": "SubmissionRejected",
       "discriminator": [
         222,
         120,
@@ -1248,7 +1242,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "submissionVerified",
+      "name": "SubmissionVerified",
       "discriminator": [
         146,
         176,
@@ -1261,7 +1255,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "vulnerabilityRevealed",
+      "name": "VulnerabilityRevealed",
       "discriminator": [
         26,
         222,
@@ -1274,7 +1268,7 @@ export type Valida = {
       ]
     },
     {
-      "name": "vulnerabilitySubmitted",
+      "name": "VulnerabilitySubmitted",
       "discriminator": [
         213,
         58,
@@ -1290,73 +1284,73 @@ export type Valida = {
   "errors": [
     {
       "code": 6000,
-      "name": "unauthorizedAdmin",
+      "name": "UnauthorizedAdmin",
       "msg": "Only admin can perform this action"
     },
     {
       "code": 6001,
-      "name": "unauthorizedAuditor",
+      "name": "UnauthorizedAuditor",
       "msg": "Only the submitting auditor can perform this action"
     },
     {
       "code": 6002,
-      "name": "invalidStatusTransition",
+      "name": "InvalidStatusTransition",
       "msg": "Submission status does not allow this action"
     },
     {
       "code": 6003,
-      "name": "bountyNotYetEligible",
+      "name": "BountyNotYetEligible",
       "msg": "Bounty can only be released after proof is verified — status must be Verified"
     },
     {
       "code": 6004,
-      "name": "fixIncentiveNotYetEligible",
+      "name": "FixIncentiveNotYetEligible",
       "msg": "Fix incentive can only be released after fix is validated — status must be FixVerified"
     },
     {
       "code": 6005,
-      "name": "nonceAlreadyUsed",
+      "name": "NonceAlreadyUsed",
       "msg": "This nonce has already been used — replay attack detected"
     },
     {
       "code": 6006,
-      "name": "commitmentMismatch",
+      "name": "CommitmentMismatch",
       "msg": "Commitment verification failed — details do not match original submission"
     },
     {
       "code": 6007,
-      "name": "alreadyPaid",
+      "name": "AlreadyPaid",
       "msg": "Payment already released"
     },
     {
       "code": 6008,
-      "name": "alreadySlashed",
+      "name": "AlreadySlashed",
       "msg": "Stake already slashed"
     },
     {
       "code": 6009,
-      "name": "insufficientStake",
+      "name": "InsufficientStake",
       "msg": "Insufficient stake — must meet required_stake minimum"
     },
     {
       "code": 6010,
-      "name": "notAuditorLedFix",
+      "name": "NotAuditorLedFix",
       "msg": "Fix incentive only applies when auditor was assigned the fix (8B path)"
     },
     {
       "code": 6011,
-      "name": "nothingToSlash",
+      "name": "NothingToSlash",
       "msg": "Cannot slash — no stake remaining"
     }
   ],
   "types": [
     {
-      "name": "bountyReleased",
+      "name": "BountyReleased",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           },
           {
@@ -1364,19 +1358,19 @@ export type Valida = {
             "type": "pubkey"
           },
           {
-            "name": "bountyAmount",
+            "name": "bounty_amount",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "escrowAccount",
+      "name": "EscrowAccount",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           },
           {
@@ -1384,30 +1378,30 @@ export type Valida = {
             "type": "pubkey"
           },
           {
-            "name": "stakedAmount",
+            "name": "staked_amount",
             "type": "u64"
           },
           {
-            "name": "bountyAmount",
+            "name": "bounty_amount",
             "type": "u64"
           },
           {
-            "name": "fixIncentiveAmount",
+            "name": "fix_incentive_amount",
             "type": "u64"
           },
           {
-            "name": "stakeReturned",
+            "name": "stake_returned",
             "type": "bool"
           },
           {
-            "name": "bountyReleased",
+            "name": "bounty_released",
             "docs": [
               "INCENTIVE #1"
             ],
             "type": "bool"
           },
           {
-            "name": "fixIncentiveReleased",
+            "name": "fix_incentive_released",
             "docs": [
               "INCENTIVE #2"
             ],
@@ -1425,24 +1419,24 @@ export type Valida = {
       }
     },
     {
-      "name": "fixCommitmentSubmitted",
+      "name": "FixCommitmentSubmitted",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "fixIncentiveReleased",
+      "name": "FixIncentiveReleased",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           },
           {
@@ -1450,31 +1444,31 @@ export type Valida = {
             "type": "pubkey"
           },
           {
-            "name": "fixIncentiveAmount",
+            "name": "fix_incentive_amount",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "fixVerified",
+      "name": "FixVerified",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "fraudDetected",
+      "name": "FraudDetected",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           },
           {
@@ -1485,24 +1479,24 @@ export type Valida = {
       }
     },
     {
-      "name": "patchPublished",
+      "name": "PatchPublished",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "patchId",
+            "name": "patch_id",
             "type": "u64"
           },
           {
-            "name": "softwareName",
+            "name": "software_name",
             "type": "string"
           },
           {
-            "name": "ipfsCid",
+            "name": "ipfs_cid",
             "type": "string"
           },
           {
-            "name": "fileHash",
+            "name": "file_hash",
             "type": {
               "array": [
                 "u8",
@@ -1514,19 +1508,19 @@ export type Valida = {
       }
     },
     {
-      "name": "patchPublishedForSubmission",
+      "name": "PatchPublishedForSubmission",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "patchRecord",
+      "name": "PatchRecord",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1535,7 +1529,7 @@ export type Valida = {
             "type": "pubkey"
           },
           {
-            "name": "softwareName",
+            "name": "software_name",
             "type": "string"
           },
           {
@@ -1543,11 +1537,11 @@ export type Valida = {
             "type": "string"
           },
           {
-            "name": "ipfsCid",
+            "name": "ipfs_cid",
             "type": "string"
           },
           {
-            "name": "fileHash",
+            "name": "file_hash",
             "type": {
               "array": [
                 "u8",
@@ -1556,11 +1550,11 @@ export type Valida = {
             }
           },
           {
-            "name": "isVerified",
+            "name": "is_verified",
             "type": "bool"
           },
           {
-            "name": "publishedAt",
+            "name": "published_at",
             "type": "i64"
           },
           {
@@ -1571,19 +1565,19 @@ export type Valida = {
       }
     },
     {
-      "name": "patchVerified",
+      "name": "PatchVerified",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "patchId",
+            "name": "patch_id",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "programConfig",
+      "name": "ProgramConfig",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1592,15 +1586,15 @@ export type Valida = {
             "type": "pubkey"
           },
           {
-            "name": "requiredStake",
+            "name": "required_stake",
             "type": "u64"
           },
           {
-            "name": "submissionCount",
+            "name": "submission_count",
             "type": "u64"
           },
           {
-            "name": "patchCount",
+            "name": "patch_count",
             "type": "u64"
           },
           {
@@ -1611,7 +1605,7 @@ export type Valida = {
       }
     },
     {
-      "name": "programInitialized",
+      "name": "ProgramInitialized",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1620,58 +1614,58 @@ export type Valida = {
             "type": "pubkey"
           },
           {
-            "name": "requiredStake",
+            "name": "required_stake",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "resolutionDecided",
+      "name": "ResolutionDecided",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           },
           {
-            "name": "auditorLed",
+            "name": "auditor_led",
             "type": "bool"
           }
         ]
       }
     },
     {
-      "name": "submissionRejected",
+      "name": "SubmissionRejected",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           },
           {
-            "name": "stakeSlashed",
+            "name": "stake_slashed",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "submissionVerified",
+      "name": "SubmissionVerified",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "usedNonce",
+      "name": "UsedNonce",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1691,28 +1685,28 @@ export type Valida = {
       }
     },
     {
-      "name": "vulnerabilityRevealed",
+      "name": "VulnerabilityRevealed",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           },
           {
-            "name": "ipfsCid",
+            "name": "ipfs_cid",
             "type": "string"
           }
         ]
       }
     },
     {
-      "name": "vulnerabilitySubmission",
+      "name": "VulnerabilitySubmission",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           },
           {
@@ -1729,7 +1723,7 @@ export type Valida = {
             }
           },
           {
-            "name": "templateType",
+            "name": "template_type",
             "type": "u8"
           },
           {
@@ -1737,11 +1731,11 @@ export type Valida = {
             "type": "u8"
           },
           {
-            "name": "affectedSoftware",
+            "name": "affected_software",
             "type": "string"
           },
           {
-            "name": "affectedVersion",
+            "name": "affected_version",
             "type": "string"
           },
           {
@@ -1752,14 +1746,14 @@ export type Valida = {
             "type": "u8"
           },
           {
-            "name": "bountyPaid",
+            "name": "bounty_paid",
             "docs": [
               "INCENTIVE #1 — paid for finding the bug (Step 5 only)"
             ],
             "type": "bool"
           },
           {
-            "name": "fixIncentivePaid",
+            "name": "fix_incentive_paid",
             "docs": [
               "INCENTIVE #2 — paid for fixing the bug (Step 9 only)"
             ],
@@ -1770,7 +1764,7 @@ export type Valida = {
             "type": "u64"
           },
           {
-            "name": "systemCodeHash",
+            "name": "system_code_hash",
             "type": {
               "array": [
                 "u8",
@@ -1779,14 +1773,14 @@ export type Valida = {
             }
           },
           {
-            "name": "auditorLed",
+            "name": "auditor_led",
             "docs": [
               "true = 8B (auditor fixes), false = 8A (team fixes internally)"
             ],
             "type": "bool"
           },
           {
-            "name": "fixCommitment",
+            "name": "fix_commitment",
             "type": {
               "array": [
                 "u8",
@@ -1795,22 +1789,22 @@ export type Valida = {
             }
           },
           {
-            "name": "commitmentVerified",
+            "name": "commitment_verified",
             "type": "bool"
           },
           {
-            "name": "fraudDetected",
+            "name": "fraud_detected",
             "type": "bool"
           },
           {
-            "name": "revealedIpfsCid",
+            "name": "revealed_ipfs_cid",
             "docs": [
               "filled at Step 6 (reveal_and_verify)"
             ],
             "type": "string"
           },
           {
-            "name": "submittedAt",
+            "name": "submitted_at",
             "type": "i64"
           },
           {
@@ -1821,12 +1815,12 @@ export type Valida = {
       }
     },
     {
-      "name": "vulnerabilitySubmitted",
+      "name": "VulnerabilitySubmitted",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submissionId",
+            "name": "submission_id",
             "type": "u64"
           },
           {
@@ -1834,7 +1828,7 @@ export type Valida = {
             "type": "pubkey"
           },
           {
-            "name": "templateType",
+            "name": "template_type",
             "type": "u8"
           },
           {
@@ -1845,4 +1839,4 @@ export type Valida = {
       }
     }
   ]
-};
+}

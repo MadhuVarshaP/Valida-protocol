@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use crate::state::*;
-use crate::errors::ValidaError;
+use crate::errors::ZyraError;
 
 // ── initialize ────────────────────────────────────────────────────────────────
 
@@ -54,7 +54,7 @@ pub struct PublishPatch<'info> {
         mut,
         seeds = [b"config"],
         bump = config.bump,
-        constraint = config.admin == admin.key() @ ValidaError::UnauthorizedAdmin,
+        constraint = config.admin == admin.key() @ ZyraError::UnauthorizedAdmin,
     )]
     pub config: Account<'info, ProgramConfig>,
 
@@ -111,7 +111,7 @@ pub struct VerifyPatch<'info> {
     #[account(
         seeds = [b"config"],
         bump = config.bump,
-        constraint = config.admin == admin.key() @ ValidaError::UnauthorizedAdmin,
+        constraint = config.admin == admin.key() @ ZyraError::UnauthorizedAdmin,
     )]
     pub config: Account<'info, ProgramConfig>,
 

@@ -7,12 +7,12 @@ import { Button, Badge } from "@/components/UI";
 import { LifecycleTimeline } from "@/components/LifecycleTimeline";
 import { FormInput } from "@/components/Forms";
 import { useWallet } from "@/context/WalletContext";
-import { useValidaProgram } from "@/hooks/useValidaProgram";
+import { useZyraProgram } from "@/hooks/useZyraProgram";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { BN } from "@coral-xyz/anchor";
 import { SystemProgram } from "@solana/web3.js";
 import { configPda, vulnPda, escrowPda, noncePda } from "@/lib/solana/pdas";
-import { fetchConfig } from "@/lib/solana/valida";
+import { fetchConfig } from "@/lib/solana/zyra";
 import {
   generateSalt,
   computeCommitmentHex,
@@ -66,7 +66,7 @@ const INITIAL_FORM: FormState = {
 
 export default function AuditorSubmitPage() {
   const { address } = useWallet();
-  const { program, canSign } = useValidaProgram();
+  const { program, canSign } = useZyraProgram();
   const anchorWallet = useAnchorWallet();
 
   const [form, setForm] = useState<FormState>(INITIAL_FORM);

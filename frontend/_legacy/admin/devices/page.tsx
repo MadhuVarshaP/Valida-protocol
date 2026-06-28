@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { useWallet } from "@/context/WalletContext";
 import { useToast } from "@/context/ToastContext";
-import { validaContractAbi } from "@/lib/contractAbi";
+import { zyraContractAbi } from "@/lib/contractAbi";
 import { getContractWithSigner, getFrontendContractAddress } from "@/lib/ethers";
 
 type Device = {
@@ -76,7 +76,7 @@ export default function AdminDevices() {
                 : "other";
 
             const contractAddress = getFrontendContractAddress();
-            const contract = await getContractWithSigner(contractAddress, validaContractAbi);
+            const contract = await getContractWithSigner(contractAddress, zyraContractAbi);
             const tx = await contract.registerDevice(walletAddress.trim());
             await tx.wait();
 
@@ -118,7 +118,7 @@ export default function AdminDevices() {
         setRevokingWallet(device.walletAddress);
         try {
             const contractAddress = getFrontendContractAddress();
-            const contract = await getContractWithSigner(contractAddress, validaContractAbi);
+            const contract = await getContractWithSigner(contractAddress, zyraContractAbi);
             const tx = await contract.revokeDevice(device.walletAddress);
             await tx.wait();
 

@@ -1,14 +1,20 @@
-{
+/**
+ * Program IDL in camelCase format in order to be used in JS/TS.
+ *
+ * Note that this is only a type helper and is not the actual IDL. The original
+ * IDL can be found at `target/idl/zyra.json`.
+ */
+export type Zyra = {
   "address": "8ndCjxUiatZDPJjxe22cwTSUALHWbfT88Pn2Up18yfLe",
   "metadata": {
-    "name": "valida",
+    "name": "zyra",
     "version": "0.1.0",
     "spec": "0.1.0",
-    "description": "Valida Protocol — Solana Anchor program for patch management and vulnerability disclosure"
+    "description": "Zyra Protocol — Solana Anchor program for patch management and vulnerability disclosure"
   },
   "instructions": [
     {
-      "name": "decide_resolution",
+      "name": "decideResolution",
       "discriminator": [
         244,
         55,
@@ -36,7 +42,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -66,11 +72,11 @@
       ],
       "args": [
         {
-          "name": "submission_id",
+          "name": "submissionId",
           "type": "u64"
         },
         {
-          "name": "auditor_led",
+          "name": "auditorLed",
           "type": "bool"
         }
       ]
@@ -113,19 +119,19 @@
           "signer": true
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "required_stake",
+          "name": "requiredStake",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "mark_published",
+      "name": "markPublished",
       "discriminator": [
         207,
         50,
@@ -153,7 +159,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -183,13 +189,13 @@
       ],
       "args": [
         {
-          "name": "submission_id",
+          "name": "submissionId",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "publish_patch",
+      "name": "publishPatch",
       "discriminator": [
         145,
         176,
@@ -219,7 +225,7 @@
               {
                 "kind": "account",
                 "path": "config.patch_count",
-                "account": "ProgramConfig"
+                "account": "programConfig"
               }
             ]
           }
@@ -249,13 +255,13 @@
           "signer": true
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "software_name",
+          "name": "softwareName",
           "type": "string"
         },
         {
@@ -263,11 +269,11 @@
           "type": "string"
         },
         {
-          "name": "ipfs_cid",
+          "name": "ipfsCid",
           "type": "string"
         },
         {
-          "name": "file_hash",
+          "name": "fileHash",
           "type": {
             "array": [
               "u8",
@@ -278,7 +284,7 @@
       ]
     },
     {
-      "name": "reject_submission",
+      "name": "rejectSubmission",
       "discriminator": [
         2,
         92,
@@ -306,7 +312,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -329,7 +335,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -360,13 +366,13 @@
       ],
       "args": [
         {
-          "name": "submission_id",
+          "name": "submissionId",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "release_bounty",
+      "name": "releaseBounty",
       "discriminator": [
         208,
         104,
@@ -394,7 +400,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -417,7 +423,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -455,17 +461,17 @@
       ],
       "args": [
         {
-          "name": "submission_id",
+          "name": "submissionId",
           "type": "u64"
         },
         {
-          "name": "bounty_amount",
+          "name": "bountyAmount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "release_fix_incentive",
+      "name": "releaseFixIncentive",
       "discriminator": [
         148,
         210,
@@ -493,7 +499,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -516,7 +522,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -554,17 +560,17 @@
       ],
       "args": [
         {
-          "name": "submission_id",
+          "name": "submissionId",
           "type": "u64"
         },
         {
-          "name": "fix_incentive_amount",
+          "name": "fixIncentiveAmount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "reveal_and_verify",
+      "name": "revealAndVerify",
       "discriminator": [
         47,
         108,
@@ -592,7 +598,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -604,7 +610,7 @@
       ],
       "args": [
         {
-          "name": "submission_id",
+          "name": "submissionId",
           "type": "u64"
         },
         {
@@ -621,13 +627,13 @@
           }
         },
         {
-          "name": "revealed_ipfs_cid",
+          "name": "revealedIpfsCid",
           "type": "string"
         }
       ]
     },
     {
-      "name": "stake_and_submit",
+      "name": "stakeAndSubmit",
       "discriminator": [
         164,
         145,
@@ -656,7 +662,7 @@
               {
                 "kind": "account",
                 "path": "config.submission_count",
-                "account": "ProgramConfig"
+                "account": "programConfig"
               }
             ]
           }
@@ -680,13 +686,13 @@
               {
                 "kind": "account",
                 "path": "config.submission_count",
-                "account": "ProgramConfig"
+                "account": "programConfig"
               }
             ]
           }
         },
         {
-          "name": "used_nonce",
+          "name": "usedNonce",
           "writable": true,
           "pda": {
             "seeds": [
@@ -732,7 +738,7 @@
           "signer": true
         },
         {
-          "name": "system_program",
+          "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -747,7 +753,7 @@
           }
         },
         {
-          "name": "template_type",
+          "name": "templateType",
           "type": "u8"
         },
         {
@@ -755,11 +761,11 @@
           "type": "u8"
         },
         {
-          "name": "affected_software",
+          "name": "affectedSoftware",
           "type": "string"
         },
         {
-          "name": "affected_version",
+          "name": "affectedVersion",
           "type": "string"
         },
         {
@@ -767,7 +773,7 @@
           "type": "u64"
         },
         {
-          "name": "system_code_hash",
+          "name": "systemCodeHash",
           "type": {
             "array": [
               "u8",
@@ -776,13 +782,13 @@
           }
         },
         {
-          "name": "stake_amount",
+          "name": "stakeAmount",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "submit_fix_commitment",
+      "name": "submitFixCommitment",
       "discriminator": [
         196,
         170,
@@ -810,7 +816,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -822,11 +828,11 @@
       ],
       "args": [
         {
-          "name": "submission_id",
+          "name": "submissionId",
           "type": "u64"
         },
         {
-          "name": "fix_commitment",
+          "name": "fixCommitment",
           "type": {
             "array": [
               "u8",
@@ -837,7 +843,7 @@
       ]
     },
     {
-      "name": "verify_fix",
+      "name": "verifyFix",
       "discriminator": [
         114,
         48,
@@ -865,7 +871,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -895,13 +901,13 @@
       ],
       "args": [
         {
-          "name": "submission_id",
+          "name": "submissionId",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "verify_patch",
+      "name": "verifyPatch",
       "discriminator": [
         128,
         85,
@@ -930,7 +936,7 @@
               },
               {
                 "kind": "arg",
-                "path": "patch_id"
+                "path": "patchId"
               }
             ]
           }
@@ -960,13 +966,13 @@
       ],
       "args": [
         {
-          "name": "patch_id",
+          "name": "patchId",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "verify_submission",
+      "name": "verifySubmission",
       "discriminator": [
         162,
         234,
@@ -994,7 +1000,7 @@
               },
               {
                 "kind": "arg",
-                "path": "submission_id"
+                "path": "submissionId"
               }
             ]
           }
@@ -1024,7 +1030,7 @@
       ],
       "args": [
         {
-          "name": "submission_id",
+          "name": "submissionId",
           "type": "u64"
         }
       ]
@@ -1032,7 +1038,7 @@
   ],
   "accounts": [
     {
-      "name": "EscrowAccount",
+      "name": "escrowAccount",
       "discriminator": [
         36,
         69,
@@ -1045,7 +1051,7 @@
       ]
     },
     {
-      "name": "PatchRecord",
+      "name": "patchRecord",
       "discriminator": [
         255,
         206,
@@ -1058,7 +1064,7 @@
       ]
     },
     {
-      "name": "ProgramConfig",
+      "name": "programConfig",
       "discriminator": [
         196,
         210,
@@ -1071,7 +1077,7 @@
       ]
     },
     {
-      "name": "UsedNonce",
+      "name": "usedNonce",
       "discriminator": [
         212,
         222,
@@ -1084,7 +1090,7 @@
       ]
     },
     {
-      "name": "VulnerabilitySubmission",
+      "name": "vulnerabilitySubmission",
       "discriminator": [
         222,
         253,
@@ -1099,7 +1105,7 @@
   ],
   "events": [
     {
-      "name": "BountyReleased",
+      "name": "bountyReleased",
       "discriminator": [
         56,
         153,
@@ -1112,7 +1118,7 @@
       ]
     },
     {
-      "name": "FixCommitmentSubmitted",
+      "name": "fixCommitmentSubmitted",
       "discriminator": [
         22,
         125,
@@ -1125,7 +1131,7 @@
       ]
     },
     {
-      "name": "FixIncentiveReleased",
+      "name": "fixIncentiveReleased",
       "discriminator": [
         59,
         8,
@@ -1138,7 +1144,7 @@
       ]
     },
     {
-      "name": "FixVerified",
+      "name": "fixVerified",
       "discriminator": [
         25,
         144,
@@ -1151,7 +1157,7 @@
       ]
     },
     {
-      "name": "FraudDetected",
+      "name": "fraudDetected",
       "discriminator": [
         209,
         35,
@@ -1164,7 +1170,7 @@
       ]
     },
     {
-      "name": "PatchPublished",
+      "name": "patchPublished",
       "discriminator": [
         218,
         212,
@@ -1177,7 +1183,7 @@
       ]
     },
     {
-      "name": "PatchPublishedForSubmission",
+      "name": "patchPublishedForSubmission",
       "discriminator": [
         234,
         193,
@@ -1190,7 +1196,7 @@
       ]
     },
     {
-      "name": "PatchVerified",
+      "name": "patchVerified",
       "discriminator": [
         162,
         118,
@@ -1203,7 +1209,7 @@
       ]
     },
     {
-      "name": "ProgramInitialized",
+      "name": "programInitialized",
       "discriminator": [
         43,
         70,
@@ -1216,7 +1222,7 @@
       ]
     },
     {
-      "name": "ResolutionDecided",
+      "name": "resolutionDecided",
       "discriminator": [
         26,
         66,
@@ -1229,7 +1235,7 @@
       ]
     },
     {
-      "name": "SubmissionRejected",
+      "name": "submissionRejected",
       "discriminator": [
         222,
         120,
@@ -1242,7 +1248,7 @@
       ]
     },
     {
-      "name": "SubmissionVerified",
+      "name": "submissionVerified",
       "discriminator": [
         146,
         176,
@@ -1255,7 +1261,7 @@
       ]
     },
     {
-      "name": "VulnerabilityRevealed",
+      "name": "vulnerabilityRevealed",
       "discriminator": [
         26,
         222,
@@ -1268,7 +1274,7 @@
       ]
     },
     {
-      "name": "VulnerabilitySubmitted",
+      "name": "vulnerabilitySubmitted",
       "discriminator": [
         213,
         58,
@@ -1284,73 +1290,73 @@
   "errors": [
     {
       "code": 6000,
-      "name": "UnauthorizedAdmin",
+      "name": "unauthorizedAdmin",
       "msg": "Only admin can perform this action"
     },
     {
       "code": 6001,
-      "name": "UnauthorizedAuditor",
+      "name": "unauthorizedAuditor",
       "msg": "Only the submitting auditor can perform this action"
     },
     {
       "code": 6002,
-      "name": "InvalidStatusTransition",
+      "name": "invalidStatusTransition",
       "msg": "Submission status does not allow this action"
     },
     {
       "code": 6003,
-      "name": "BountyNotYetEligible",
+      "name": "bountyNotYetEligible",
       "msg": "Bounty can only be released after proof is verified — status must be Verified"
     },
     {
       "code": 6004,
-      "name": "FixIncentiveNotYetEligible",
+      "name": "fixIncentiveNotYetEligible",
       "msg": "Fix incentive can only be released after fix is validated — status must be FixVerified"
     },
     {
       "code": 6005,
-      "name": "NonceAlreadyUsed",
+      "name": "nonceAlreadyUsed",
       "msg": "This nonce has already been used — replay attack detected"
     },
     {
       "code": 6006,
-      "name": "CommitmentMismatch",
+      "name": "commitmentMismatch",
       "msg": "Commitment verification failed — details do not match original submission"
     },
     {
       "code": 6007,
-      "name": "AlreadyPaid",
+      "name": "alreadyPaid",
       "msg": "Payment already released"
     },
     {
       "code": 6008,
-      "name": "AlreadySlashed",
+      "name": "alreadySlashed",
       "msg": "Stake already slashed"
     },
     {
       "code": 6009,
-      "name": "InsufficientStake",
+      "name": "insufficientStake",
       "msg": "Insufficient stake — must meet required_stake minimum"
     },
     {
       "code": 6010,
-      "name": "NotAuditorLedFix",
+      "name": "notAuditorLedFix",
       "msg": "Fix incentive only applies when auditor was assigned the fix (8B path)"
     },
     {
       "code": 6011,
-      "name": "NothingToSlash",
+      "name": "nothingToSlash",
       "msg": "Cannot slash — no stake remaining"
     }
   ],
   "types": [
     {
-      "name": "BountyReleased",
+      "name": "bountyReleased",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           },
           {
@@ -1358,19 +1364,19 @@
             "type": "pubkey"
           },
           {
-            "name": "bounty_amount",
+            "name": "bountyAmount",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "EscrowAccount",
+      "name": "escrowAccount",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           },
           {
@@ -1378,30 +1384,30 @@
             "type": "pubkey"
           },
           {
-            "name": "staked_amount",
+            "name": "stakedAmount",
             "type": "u64"
           },
           {
-            "name": "bounty_amount",
+            "name": "bountyAmount",
             "type": "u64"
           },
           {
-            "name": "fix_incentive_amount",
+            "name": "fixIncentiveAmount",
             "type": "u64"
           },
           {
-            "name": "stake_returned",
+            "name": "stakeReturned",
             "type": "bool"
           },
           {
-            "name": "bounty_released",
+            "name": "bountyReleased",
             "docs": [
               "INCENTIVE #1"
             ],
             "type": "bool"
           },
           {
-            "name": "fix_incentive_released",
+            "name": "fixIncentiveReleased",
             "docs": [
               "INCENTIVE #2"
             ],
@@ -1419,24 +1425,24 @@
       }
     },
     {
-      "name": "FixCommitmentSubmitted",
+      "name": "fixCommitmentSubmitted",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "FixIncentiveReleased",
+      "name": "fixIncentiveReleased",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           },
           {
@@ -1444,31 +1450,31 @@
             "type": "pubkey"
           },
           {
-            "name": "fix_incentive_amount",
+            "name": "fixIncentiveAmount",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "FixVerified",
+      "name": "fixVerified",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "FraudDetected",
+      "name": "fraudDetected",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           },
           {
@@ -1479,24 +1485,24 @@
       }
     },
     {
-      "name": "PatchPublished",
+      "name": "patchPublished",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "patch_id",
+            "name": "patchId",
             "type": "u64"
           },
           {
-            "name": "software_name",
+            "name": "softwareName",
             "type": "string"
           },
           {
-            "name": "ipfs_cid",
+            "name": "ipfsCid",
             "type": "string"
           },
           {
-            "name": "file_hash",
+            "name": "fileHash",
             "type": {
               "array": [
                 "u8",
@@ -1508,19 +1514,19 @@
       }
     },
     {
-      "name": "PatchPublishedForSubmission",
+      "name": "patchPublishedForSubmission",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "PatchRecord",
+      "name": "patchRecord",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1529,7 +1535,7 @@
             "type": "pubkey"
           },
           {
-            "name": "software_name",
+            "name": "softwareName",
             "type": "string"
           },
           {
@@ -1537,11 +1543,11 @@
             "type": "string"
           },
           {
-            "name": "ipfs_cid",
+            "name": "ipfsCid",
             "type": "string"
           },
           {
-            "name": "file_hash",
+            "name": "fileHash",
             "type": {
               "array": [
                 "u8",
@@ -1550,11 +1556,11 @@
             }
           },
           {
-            "name": "is_verified",
+            "name": "isVerified",
             "type": "bool"
           },
           {
-            "name": "published_at",
+            "name": "publishedAt",
             "type": "i64"
           },
           {
@@ -1565,19 +1571,19 @@
       }
     },
     {
-      "name": "PatchVerified",
+      "name": "patchVerified",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "patch_id",
+            "name": "patchId",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "ProgramConfig",
+      "name": "programConfig",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1586,15 +1592,15 @@
             "type": "pubkey"
           },
           {
-            "name": "required_stake",
+            "name": "requiredStake",
             "type": "u64"
           },
           {
-            "name": "submission_count",
+            "name": "submissionCount",
             "type": "u64"
           },
           {
-            "name": "patch_count",
+            "name": "patchCount",
             "type": "u64"
           },
           {
@@ -1605,7 +1611,7 @@
       }
     },
     {
-      "name": "ProgramInitialized",
+      "name": "programInitialized",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1614,58 +1620,58 @@
             "type": "pubkey"
           },
           {
-            "name": "required_stake",
+            "name": "requiredStake",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "ResolutionDecided",
+      "name": "resolutionDecided",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           },
           {
-            "name": "auditor_led",
+            "name": "auditorLed",
             "type": "bool"
           }
         ]
       }
     },
     {
-      "name": "SubmissionRejected",
+      "name": "submissionRejected",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           },
           {
-            "name": "stake_slashed",
+            "name": "stakeSlashed",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "SubmissionVerified",
+      "name": "submissionVerified",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "UsedNonce",
+      "name": "usedNonce",
       "type": {
         "kind": "struct",
         "fields": [
@@ -1685,28 +1691,28 @@
       }
     },
     {
-      "name": "VulnerabilityRevealed",
+      "name": "vulnerabilityRevealed",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           },
           {
-            "name": "ipfs_cid",
+            "name": "ipfsCid",
             "type": "string"
           }
         ]
       }
     },
     {
-      "name": "VulnerabilitySubmission",
+      "name": "vulnerabilitySubmission",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           },
           {
@@ -1723,7 +1729,7 @@
             }
           },
           {
-            "name": "template_type",
+            "name": "templateType",
             "type": "u8"
           },
           {
@@ -1731,11 +1737,11 @@
             "type": "u8"
           },
           {
-            "name": "affected_software",
+            "name": "affectedSoftware",
             "type": "string"
           },
           {
-            "name": "affected_version",
+            "name": "affectedVersion",
             "type": "string"
           },
           {
@@ -1746,14 +1752,14 @@
             "type": "u8"
           },
           {
-            "name": "bounty_paid",
+            "name": "bountyPaid",
             "docs": [
               "INCENTIVE #1 — paid for finding the bug (Step 5 only)"
             ],
             "type": "bool"
           },
           {
-            "name": "fix_incentive_paid",
+            "name": "fixIncentivePaid",
             "docs": [
               "INCENTIVE #2 — paid for fixing the bug (Step 9 only)"
             ],
@@ -1764,7 +1770,7 @@
             "type": "u64"
           },
           {
-            "name": "system_code_hash",
+            "name": "systemCodeHash",
             "type": {
               "array": [
                 "u8",
@@ -1773,14 +1779,14 @@
             }
           },
           {
-            "name": "auditor_led",
+            "name": "auditorLed",
             "docs": [
               "true = 8B (auditor fixes), false = 8A (team fixes internally)"
             ],
             "type": "bool"
           },
           {
-            "name": "fix_commitment",
+            "name": "fixCommitment",
             "type": {
               "array": [
                 "u8",
@@ -1789,22 +1795,22 @@
             }
           },
           {
-            "name": "commitment_verified",
+            "name": "commitmentVerified",
             "type": "bool"
           },
           {
-            "name": "fraud_detected",
+            "name": "fraudDetected",
             "type": "bool"
           },
           {
-            "name": "revealed_ipfs_cid",
+            "name": "revealedIpfsCid",
             "docs": [
               "filled at Step 6 (reveal_and_verify)"
             ],
             "type": "string"
           },
           {
-            "name": "submitted_at",
+            "name": "submittedAt",
             "type": "i64"
           },
           {
@@ -1815,12 +1821,12 @@
       }
     },
     {
-      "name": "VulnerabilitySubmitted",
+      "name": "vulnerabilitySubmitted",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "submission_id",
+            "name": "submissionId",
             "type": "u64"
           },
           {
@@ -1828,7 +1834,7 @@
             "type": "pubkey"
           },
           {
-            "name": "template_type",
+            "name": "templateType",
             "type": "u8"
           },
           {
@@ -1839,4 +1845,4 @@
       }
     }
   ]
-}
+};

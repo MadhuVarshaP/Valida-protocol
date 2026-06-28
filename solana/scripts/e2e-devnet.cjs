@@ -1,5 +1,5 @@
 /**
- * Valida Protocol — Devnet End-to-End Test
+ * Zyra Protocol — Devnet End-to-End Test
  *
  * Exercises the deployed program (8ndCjxUiatZDPJjxe22cwTSUALHWbfT88Pn2Up18yfLe)
  * against Solana Devnet using the local CLI wallet as admin + treasury funder.
@@ -31,7 +31,7 @@ const os = require("os");
 const path = require("path");
 
 const RPC = process.env.RPC_URL || "https://api.devnet.solana.com";
-const IDL_PATH = path.join(__dirname, "..", "target", "idl", "valida.json");
+const IDL_PATH = path.join(__dirname, "..", "target", "idl", "zyra.json");
 const WALLET_PATH =
   process.env.ANCHOR_WALLET ||
   path.join(os.homedir(), ".config", "solana", "id.json");
@@ -109,7 +109,7 @@ async function expectFailure(thunk, expectSubstrings, name) {
 
 (async () => {
   console.log("════════════════════════════════════════════════════════════");
-  console.log(" VALIDA PROTOCOL — DEVNET END-TO-END TEST");
+  console.log(" ZYRA PROTOCOL — DEVNET END-TO-END TEST");
   console.log("════════════════════════════════════════════════════════════\n");
 
   const connection = new Connection(RPC, "confirmed");

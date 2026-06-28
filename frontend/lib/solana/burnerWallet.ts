@@ -20,14 +20,14 @@ import {
  * run without manual wallet popups.
  *
  * Key resolution order:
- *   1. localStorage["valida_burner_sk"]  — JSON array of 64 bytes (tests set this)
+ *   1. localStorage["zyra_burner_sk"]  — JSON array of 64 bytes (tests set this)
  *   2. NEXT_PUBLIC_BURNER_SECRET_KEY     — JSON array of 64 bytes
  *   3. freshly generated + persisted to localStorage
  */
 
 export const BurnerWalletName = "Burner (Devnet)" as WalletName<"Burner (Devnet)">;
 
-const STORAGE_KEY = "valida_burner_sk";
+const STORAGE_KEY = "zyra_burner_sk";
 
 // A tiny green shield icon (data URI) so the wallet modal renders something.
 const ICON =

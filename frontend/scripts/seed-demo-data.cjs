@@ -1,5 +1,5 @@
 /**
- * Valida Protocol — Devnet demo seed.
+ * Zyra Protocol — Devnet demo seed.
  *
  * Walks one submission through the full 12-step lifecycle (auditor-led /
  * 8B path, so both incentive payments and the second ZK proof are visible)
@@ -74,7 +74,7 @@ const ok = (m, sig) => console.log(`    ✓ ${m}${sig ? `\n      tx: ${explorer(
 
 (async () => {
   console.log("═══════════════════════════════════════════════════════");
-  console.log(" VALIDA — DEVNET DEMO SEED");
+  console.log(" ZYRA — DEVNET DEMO SEED");
   console.log("═══════════════════════════════════════════════════════");
 
   const connection = new Connection(RPC, "confirmed");
@@ -96,7 +96,7 @@ const ok = (m, sig) => console.log(`    ✓ ${m}${sig ? `\n      tx: ${explorer(
   const adminWallet = new anchor.Wallet(admin);
   const provider = new anchor.AnchorProvider(connection, adminWallet, { commitment: "confirmed" });
   const idl = JSON.parse(
-    fs.readFileSync(path.join(__dirname, "..", "lib", "solana", "idl", "valida.json"), "utf8")
+    fs.readFileSync(path.join(__dirname, "..", "lib", "solana", "idl", "zyra.json"), "utf8")
   );
   const program = new anchor.Program(idl, provider);
 

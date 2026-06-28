@@ -4,9 +4,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, StatCard } from "@/components/Cards";
 import { Button, EmptyState } from "@/components/UI";
-import { useValidaProgram } from "@/hooks/useValidaProgram";
+import { useZyraProgram } from "@/hooks/useZyraProgram";
 import { useConnection } from "@solana/wallet-adapter-react";
-import { fetchConfig, fetchAllEscrows, type EscrowAccountView } from "@/lib/solana/valida";
+import { fetchConfig, fetchAllEscrows, type EscrowAccountView } from "@/lib/solana/zyra";
 import { configPda } from "@/lib/solana/pdas";
 import { LAMPORTS_PER_SOL } from "@/lib/solana/constants";
 import { Coins, RefreshCw, AlertTriangle, CheckCircle2, PiggyBank, ShieldX, TrendingUp } from "lucide-react";
@@ -14,7 +14,7 @@ import { Coins, RefreshCw, AlertTriangle, CheckCircle2, PiggyBank, ShieldX, Tren
 const sol = (l: bigint | number) => (Number(l) / LAMPORTS_PER_SOL).toFixed(4);
 
 export default function AdminEscrowPage() {
-  const { program } = useValidaProgram();
+  const { program } = useZyraProgram();
   const { connection } = useConnection();
   const [records, setRecords] = useState<EscrowAccountView[]>([]);
   const [treasury, setTreasury] = useState<number>(0);

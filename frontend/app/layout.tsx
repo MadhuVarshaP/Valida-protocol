@@ -21,7 +21,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Valida Protocol",
+  title: "Zyra Protocol",
   description: "Secure, decentralized patch management for enterprise-grade software distribution.",
 };
 

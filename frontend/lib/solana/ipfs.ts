@@ -1,7 +1,7 @@
 /**
  * BPMS patch storage — IPFS + SHA-256 integrity.
  *
- * The deployed Valida program stores only an `ipfs_cid` (String) and a
+ * The deployed Zyra program stores only an `ipfs_cid` (String) and a
  * `file_hash` ([u8;32]) per patch. The actual patch binary lives off-chain on
  * IPFS; the device re-downloads it, recomputes SHA-256, and compares against the
  * on-chain `file_hash` before allowing installation. This module provides:
@@ -22,7 +22,7 @@
 const PINATA_PIN_FILE_URL = "https://api.pinata.cloud/pinning/pinFileToIPFS";
 const DEFAULT_GATEWAY = "https://gateway.pinata.cloud/ipfs";
 const LOCAL_CID_PREFIX = "local-";
-const IDB_NAME = "valida-bpms";
+const IDB_NAME = "zyra-bpms";
 const IDB_STORE = "patch-files";
 
 export type StorageBackend = "Pinata IPFS" | "Local content store";

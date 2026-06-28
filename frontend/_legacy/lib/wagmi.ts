@@ -24,7 +24,7 @@ export const iopnTestnet = defineChain({
 });
 
 export const wagmiConfig = getDefaultConfig({
-  appName: process.env.NEXT_PUBLIC_APP_NAME || "Valida Protocol",
+  appName: process.env.NEXT_PUBLIC_APP_NAME || "Zyra Protocol",
   projectId,
   chains: [iopnTestnet],
   transports: {

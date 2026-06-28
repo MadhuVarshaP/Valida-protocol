@@ -59,7 +59,7 @@ export default function UnauthorizedPage() {
 
                 <h1 className="text-3xl font-bold text-[#1A1A1A] mb-4 tracking-tight">Access Restricted</h1>
                 <p className="text-[#1A1A1A]/70 mb-8 leading-relaxed">
-                    The wallet address <span className="text-rose-400 font-mono text-sm break-all">{address}</span> is not registered in the Valida Protocol network. Request publisher or device access and wait for admin approval.
+                    The wallet address <span className="text-rose-400 font-mono text-sm break-all">{address}</span> is not registered in the Zyra Protocol network. Request publisher or device access and wait for admin approval.
                 </p>
 
                 <div className="space-y-4">

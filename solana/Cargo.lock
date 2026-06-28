@@ -2599,7 +2599,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "valida"
+name = "zyra"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",

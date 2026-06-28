@@ -1,8 +1,8 @@
-# Valida Protocol — Solana Program (Anchor)
+# Zyra Protocol — Solana Program (Anchor)
 
 ## What This Is
 
-This directory contains the Anchor smart contracts for the Valida Protocol deployed on Solana Devnet. Valida Protocol is a decentralized system for patch management and vulnerability disclosure with cryptographic commit-reveal mechanics and a two-incentive payout model. The frontend and backend live in the parent repository (`/frontend`, `/backend`) and connect to these contracts via the generated IDL in `target/idl/valida.json`.
+This directory contains the Anchor smart contracts for the Zyra Protocol deployed on Solana Devnet. Zyra Protocol is a decentralized system for patch management and vulnerability disclosure with cryptographic commit-reveal mechanics and a two-incentive payout model. The frontend and backend live in the parent repository (`/frontend`, `/backend`) and connect to these contracts via the generated IDL in `target/idl/zyra.json`.
 
 ## Accounts
 
@@ -71,10 +71,10 @@ bash scripts/deploy.sh
 ## After Deploy
 
 1. Copy the Program ID from the deploy output
-2. Update `declare_id!("...")` in `programs/valida/src/lib.rs`
-3. Update `[programs.devnet] valida = "..."` in `Anchor.toml`
+2. Update `declare_id!("...")` in `programs/zyra/src/lib.rs`
+3. Update `[programs.devnet] zyra = "..."` in `Anchor.toml`
 4. Run `anchor build` again to regenerate the IDL with the correct program ID
-5. Copy `target/idl/valida.json` to the frontend (`frontend/lib/validaIdl.json`)
+5. Copy `target/idl/zyra.json` to the frontend (`frontend/lib/zyraIdl.json`)
 
 ## Devnet Deployment
 
@@ -83,4 +83,4 @@ bash scripts/deploy.sh
 
 ## Relationship to EVM Contracts
 
-The `/contract` directory contains the original EVM implementation (`ValidaVulnerability.sol`, `ValidaEscrow.sol`, `valida.sol`). This Solana program mirrors the identical 12-step workflow under the Valida Protocol name. The Solana version is the primary deployment target for the Superteam grant submission.
+The `/contract` directory contains the original EVM implementation (`ZyraVulnerability.sol`, `ZyraEscrow.sol`, `zyra.sol`). This Solana program mirrors the identical 12-step workflow under the Zyra Protocol name. The Solana version is the primary deployment target for the Superteam grant submission.

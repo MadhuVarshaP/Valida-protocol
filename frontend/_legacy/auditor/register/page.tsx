@@ -69,7 +69,7 @@ export default function AuditorRegisterPage() {
                 <div>
                     <h1 className="text-4xl font-black tracking-tight text-[#1A1A1A]/90">Auditor Registration</h1>
                     <p className="text-[#1A1A1A]/70 font-medium mt-2">
-                        Register your wallet as a security auditor to submit vulnerability reports on the Valida platform.
+                        Register your wallet as a security auditor to submit vulnerability reports on the Zyra platform.
                     </p>
                 </div>
 
@@ -88,7 +88,7 @@ export default function AuditorRegisterPage() {
                             <h2 className="text-xl font-bold text-[#1A1A1A]">Contract Not Configured</h2>
                             <p className="text-sm text-[#1A1A1A]/60 max-w-sm">
                                 <code className="bg-[#EDEDED] px-1.5 py-0.5 rounded text-xs">NEXT_PUBLIC_VULN_CONTRACT_ADDRESS</code> is
-                                not set. Ask the admin to deploy ValidaVulnerability and configure the env variable.
+                                not set. Ask the admin to deploy ZyraVulnerability and configure the env variable.
                             </p>
                         </div>
                     )}
@@ -147,7 +147,7 @@ export default function AuditorRegisterPage() {
                                     {[
                                         "Copy your wallet address above",
                                         "Share it with the system admin",
-                                        "Admin calls registerAuditor() on ValidaVulnerability contract",
+                                        "Admin calls registerAuditor() on ZyraVulnerability contract",
                                         "Refresh this page to confirm your approved status",
                                     ].map((step, i) => (
                                         <li key={i} className="flex items-center gap-3">

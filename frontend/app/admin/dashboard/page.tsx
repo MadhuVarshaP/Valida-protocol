@@ -14,10 +14,10 @@ import {
   Coins,
 } from "lucide-react";
 import Link from "next/link";
-import { useValidaProgram } from "@/hooks/useValidaProgram";
+import { useZyraProgram } from "@/hooks/useZyraProgram";
 import { useConnection } from "@solana/wallet-adapter-react";
-import { fetchConfig, type SubmissionAccount, type ProgramConfigAccount } from "@/lib/solana/valida";
-import { fetchAllSubmissions } from "@/lib/solana/valida";
+import { fetchConfig, type SubmissionAccount, type ProgramConfigAccount } from "@/lib/solana/zyra";
+import { fetchAllSubmissions } from "@/lib/solana/zyra";
 import { configPda } from "@/lib/solana/pdas";
 import {
   STATUS_LABELS,
@@ -61,7 +61,7 @@ function ConfigStat({ label, value }: { label: string; value: string }) {
 }
 
 export default function AdminDashboard() {
-  const { program } = useValidaProgram();
+  const { program } = useZyraProgram();
   const { connection } = useConnection();
   const [subs, setSubs] = useState<SubmissionAccount[]>([]);
   const [config, setConfig] = useState<ProgramConfigAccount | null>(null);
@@ -104,7 +104,7 @@ export default function AdminDashboard() {
         <div className="flex items-center justify-between">
           <div className="flex flex-col gap-2">
             <h1 className="text-4xl font-black tracking-tight text-[#1A1A1A]/90">System Overview</h1>
-            <p className="text-[#1A1A1A]/70 font-medium">Valida Protocol on Solana devnet — vulnerability disclosure and patch integrity.</p>
+            <p className="text-[#1A1A1A]/70 font-medium">Zyra Protocol on Solana devnet — vulnerability disclosure and patch integrity.</p>
           </div>
           <Button variant="outline" onClick={() => void load()} className="gap-2">
             <RefreshCw size={15} /> Refresh

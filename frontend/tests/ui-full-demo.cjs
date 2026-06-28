@@ -51,7 +51,7 @@ const ok = (m) => console.log(`    ✓ ${m}`);
 
 async function setIdentity(page, sk) {
   await page.evaluate((skArr) => {
-    window.localStorage.setItem("valida_burner_sk", JSON.stringify(skArr));
+    window.localStorage.setItem("zyra_burner_sk", JSON.stringify(skArr));
     window.localStorage.setItem("walletName", '"Burner (Devnet)"');
   }, sk);
 }
@@ -83,7 +83,7 @@ async function waitChain(page, selector, timeout = 120000) {
 
 (async () => {
   const connection = new Connection(RPC, "confirmed");
-  const idl = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "lib/solana/idl/valida.json"), "utf8"));
+  const idl = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "lib/solana/idl/zyra.json"), "utf8"));
   const provider = new anchor.AnchorProvider(
     connection,
     { publicKey: adminKp.publicKey, signTransaction: async (t) => t, signAllTransactions: async (t) => t },
@@ -124,7 +124,7 @@ async function waitChain(page, selector, timeout = 120000) {
 
   const downloads = [];
   page.on("download", async (d) => {
-    const p = path.join(os.tmpdir(), `valida-${Date.now()}-${d.suggestedFilename()}`);
+    const p = path.join(os.tmpdir(), `zyra-${Date.now()}-${d.suggestedFilename()}`);
     await d.saveAs(p);
     downloads.push({ name: d.suggestedFilename(), path: p });
   });

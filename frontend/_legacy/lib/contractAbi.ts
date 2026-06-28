@@ -1,4 +1,4 @@
-export const validaContractAbi = [
+export const zyraContractAbi = [
 	{
 		"inputs": [
 			{

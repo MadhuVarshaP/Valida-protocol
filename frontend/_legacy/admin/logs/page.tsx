@@ -79,7 +79,7 @@ export default function AdminLogs() {
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = `valida-admin-logs-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.csv`;
+        a.download = `zyra-admin-logs-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-")}.csv`;
         document.body.appendChild(a);
         a.click();
         a.remove();

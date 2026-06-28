@@ -57,11 +57,11 @@ function pda(seeds: Buffer[], programId: PublicKey): [PublicKey, number] {
 
 // ── Suite ─────────────────────────────────────────────────────────────────────
 
-describe("valida protocol", () => {
+describe("zyra protocol", () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
-  const program = anchor.workspace.Valida as Program<any>;
+  const program = anchor.workspace.Zyra as Program<any>;
   const admin = (provider.wallet as anchor.Wallet).payer;
   const auditor = Keypair.generate();
 

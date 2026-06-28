@@ -16,7 +16,7 @@ import {
 import { useWallet } from "@/context/WalletContext";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/context/ToastContext";
-import { validaContractAbi } from "@/lib/contractAbi";
+import { zyraContractAbi } from "@/lib/contractAbi";
 import { getContractWithSigner, getFrontendContractAddress, getSigner } from "@/lib/ethers";
 
 const PATCH_FILE_ACCEPT = ".exe,.msi,.dmg,.pkg,.deb,.rpm,.bin,.zip,.tar,.gz,.img,.iso,.tar.gz";
@@ -133,7 +133,7 @@ export default function PublisherPublish() {
             const contractAddress = getFrontendContractAddress();
             const signer = await getSigner();
             const signerAddress = (await signer.getAddress()).toLowerCase();
-            const contract = await getContractWithSigner(contractAddress, validaContractAbi);
+            const contract = await getContractWithSigner(contractAddress, zyraContractAbi);
 
             const tx = await contract.publishPatch(namespace, version, ipfsHash, fileHash);
             setPublishPhase("confirming");
@@ -293,7 +293,7 @@ export default function PublisherPublish() {
                                 </div>
                                 {/* <div className="flex flex-col items-end gap-1">
                                     <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Protocol Version</span>
-                                    <span className="text-xs font-mono text-[#1A1A1A]/80">Valida Protocol-1.0-SEC</span>
+                                    <span className="text-xs font-mono text-[#1A1A1A]/80">Zyra Protocol-1.0-SEC</span>
                                 </div> */}
                             </div>
 

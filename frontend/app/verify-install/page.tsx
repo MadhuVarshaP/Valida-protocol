@@ -4,8 +4,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, StatCard } from "@/components/Cards";
 import { Badge, Button, EmptyState } from "@/components/UI";
-import { useValidaProgram } from "@/hooks/useValidaProgram";
-import { fetchConfig, fetchAllPatches, type PatchAccount } from "@/lib/solana/valida";
+import { useZyraProgram } from "@/hooks/useZyraProgram";
+import { fetchConfig, fetchAllPatches, type PatchAccount } from "@/lib/solana/zyra";
 import { explorerAddress } from "@/lib/solana/constants";
 import { patchPda } from "@/lib/solana/pdas";
 import {
@@ -52,7 +52,7 @@ const PHASE_LABEL: Record<Phase, string> = {
 };
 
 export default function VerifyInstallPage() {
-  const { program } = useValidaProgram();
+  const { program } = useZyraProgram();
   const manualRef = useRef<HTMLInputElement>(null);
 
   const [patches, setPatches] = useState<PatchAccount[]>([]);

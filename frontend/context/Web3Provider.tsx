@@ -1,17 +1,17 @@
 "use client";
 
 import "@/lib/solana/polyfill";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import {
   ConnectionProvider,
   WalletProvider as SolanaWalletAdapterProvider,
 } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import {
-  PhantomWalletAdapter,
-  SolflareWalletAdapter,
-} from "@solana/wallet-adapter-wallets";
-import type { Adapter } from "@solana/wallet-adapter-base";
+  WalletError,
+  WalletNotReadyError,
+  type Adapter,
+} from "@solana/wallet-adapter-base";
 import { RPC_ENDPOINT } from "@/lib/solana/constants";
 import { BurnerWalletAdapter } from "@/lib/solana/burnerWallet";
 
@@ -26,20 +26,45 @@ import "@solana/wallet-adapter-react-ui/styles.css";
 export function Web3Provider({ children }: { children: React.ReactNode }) {
   const endpoint = RPC_ENDPOINT;
 
+  // Phantom and Solflare register themselves via the Wallet Standard, so
+  // wallet-adapter auto-detects them — we must NOT also pass the legacy
+  // PhantomWalletAdapter/SolflareWalletAdapter, or Phantom ends up registered
+  // twice and autoConnect drives the standard adapter into a
+  // "WalletConnectionError: Unexpected error". Only the burner (a non-standard
+  // local-keypair wallet for tests/headless demos) is registered explicitly.
   const wallets = useMemo<Adapter[]>(() => {
-    const list: Adapter[] = [
-      new PhantomWalletAdapter(),
-      new SolflareWalletAdapter(),
-    ];
     if (process.env.NEXT_PUBLIC_ENABLE_BURNER === "true") {
-      list.unshift(new BurnerWalletAdapter() as unknown as Adapter);
+      return [new BurnerWalletAdapter() as unknown as Adapter];
     }
-    return list;
+    return [];
+  }, []);
+
+  // Without an onError handler, a rejected/locked-wallet connection (or the
+  // autoConnect race on refresh) throws uncaught and looks like a hard crash.
+  // Swallow the benign cases; log the rest with a clear prefix so real failures
+  // (e.g. a devnet RPC rejection) are diagnosable in the console.
+  const onError = useCallback((error: WalletError) => {
+    if (
+      error instanceof WalletNotReadyError ||
+      error.name === "WalletNotSelectedError" ||
+      error.name === "WalletConnectionError" ||
+      /user reject|rejected|cancel/i.test(error.message || "")
+    ) {
+      // User dismissed the popup or the wallet wasn't ready — not fatal.
+      console.warn("[wallet]", error.name, error.message);
+      return;
+    }
+    console.error("[wallet] connection error:", error);
   }, []);
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
-      <SolanaWalletAdapterProvider wallets={wallets} autoConnect>
+    <ConnectionProvider endpoint={endpoint} config={{ commitment: "confirmed" }}>
+      <SolanaWalletAdapterProvider
+        wallets={wallets}
+        autoConnect
+        onError={onError}
+        localStorageKey="zyra_wallet"
+      >
         <WalletModalProvider>{children}</WalletModalProvider>
       </SolanaWalletAdapterProvider>
     </ConnectionProvider>

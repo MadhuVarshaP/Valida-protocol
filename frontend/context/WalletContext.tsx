@@ -14,7 +14,7 @@ import {
   useWallet as useSolanaWallet,
 } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import { getProgram, getReadonlyProgram, fetchConfig } from "@/lib/solana/valida";
+import { getProgram, getReadonlyProgram, fetchConfig } from "@/lib/solana/zyra";
 
 type Role = "admin" | "publisher" | "device" | "auditor" | "unauthorized" | null;
 

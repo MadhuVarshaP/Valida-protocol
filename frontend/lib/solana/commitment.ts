@@ -1,7 +1,7 @@
 import { keccak_256 } from "@noble/hashes/sha3.js";
 
 /**
- * Commit-reveal hashing for Valida.
+ * Commit-reveal hashing for Zyra.
  *
  * The on-chain program verifies the reveal with:
  *     keccak::hashv(&[details.as_bytes(), &salt])

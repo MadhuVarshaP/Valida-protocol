@@ -98,7 +98,7 @@ pub struct PatchPublishedForSubmission {
 // ── Program ───────────────────────────────────────────────────────────────────
 
 #[program]
-pub mod valida {
+pub mod zyra {
     use super::*;
 
     pub fn initialize(ctx: Context<Initialize>, required_stake: u64) -> Result<()> {

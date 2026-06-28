@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[error_code]
-pub enum ValidaError {
+pub enum ZyraError {
     #[msg("Only admin can perform this action")]
     UnauthorizedAdmin,
 

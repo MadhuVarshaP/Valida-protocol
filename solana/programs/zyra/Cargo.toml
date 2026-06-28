@@ -1,12 +1,12 @@
 [package]
-name = "valida"
+name = "zyra"
 version = "0.1.0"
-description = "Valida Protocol — Solana Anchor program for patch management and vulnerability disclosure"
+description = "Zyra Protocol — Solana Anchor program for patch management and vulnerability disclosure"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib", "lib"]
-name = "valida"
+name = "zyra"
 
 [features]
 no-entrypoint = []

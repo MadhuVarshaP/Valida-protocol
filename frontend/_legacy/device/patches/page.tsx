@@ -20,7 +20,7 @@ import { useToast } from "@/context/ToastContext";
 import { apiGet, apiPost } from "@/lib/api";
 import { isVersionNewer } from "@/lib/versionCompare";
 import { normalizeHash, sha256OfBuffer } from "@/lib/patchIntegrity";
-import { validaContractAbi } from "@/lib/contractAbi";
+import { zyraContractAbi } from "@/lib/contractAbi";
 import { getContractWithSigner, getFrontendContractAddress } from "@/lib/ethers";
 
 type DeviceProfile = {
@@ -176,7 +176,7 @@ export default function DevicePatches() {
             setInstallPhase("verifying");
             setInstallMessage("Verifying SHA-256 hash against on-chain file hash...");
             const localHash = normalizeHash(await sha256OfBuffer(buf));
-            const contract = await getContractWithSigner(contractAddress, validaContractAbi);
+            const contract = await getContractWithSigner(contractAddress, zyraContractAbi);
             const onChain = await contract.patches(selectedPatch.patchId);
             const chainHash = normalizeHash(String(onChain.fileHash));
             if (localHash !== chainHash) {

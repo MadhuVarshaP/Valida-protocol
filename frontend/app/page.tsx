@@ -52,7 +52,7 @@ export default function LandingPage() {
       <nav className="w-full flex items-center justify-between px-6 sm:px-12 py-8 max-w-[1400px] mx-auto relative z-30">
         <div className="flex items-center gap-2">
           <img src="/logo.png" alt="Logo" className="h-7 md:h-10 object-contain" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-          <span className="text-xl md:text-2xl font-black tracking-tight text-[#1A1A1A]">Valida Protocol</span>
+          <span className="text-xl md:text-2xl font-black tracking-tight text-[#1A1A1A]">Zyra Protocol</span>
         </div>
 
         {/* <div className="hidden lg:flex items-center gap-10">
@@ -114,7 +114,7 @@ export default function LandingPage() {
               transition={{ duration: 0.7, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="text-lg sm:text-xl md:text-2xl text-[#1A1A1A]/85 max-w-3xl leading-[1.6] mb-12 font-medium relative z-10 px-4"
             >
-              Trust is <span className="font-bold bg-white px-2 rounded-md">verified</span>, not assumed. Valida Protocol combines role-governed patch publishing and on-chain integrity checks.
+              Trust is <span className="font-bold bg-white px-2 rounded-md">verified</span>, not assumed. Zyra Protocol combines role-governed patch publishing and on-chain integrity checks.
             </motion.p>
 
             {/* Down Arrow overlap */}

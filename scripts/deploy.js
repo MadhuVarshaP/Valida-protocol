@@ -1,6 +1,6 @@
 /**
- * Valida Platform — Deployment Script
- * Deploys ValidaVulnerability, ValidaEscrow, ValidaZKVerifier and links them.
+ * Zyra Platform — Deployment Script
+ * Deploys ZyraVulnerability, ZyraEscrow, ZyraZKVerifier and links them.
  *
  * Usage:
  *   node scripts/deploy.js
@@ -61,36 +61,36 @@ async function main() {
     const balance = await provider.getBalance(deployerAddress);
 
     console.log("════════════════════════════════════════════════════════════");
-    console.log("  Valida Platform — Deployment");
+    console.log("  Zyra Platform — Deployment");
     console.log("════════════════════════════════════════════════════════════");
     console.log(`  Network:  ${network.name} (chainId: ${network.chainId})`);
     console.log(`  Deployer: ${deployerAddress}`);
     console.log(`  Balance:  ${ethers.formatEther(balance)} ETH`);
     console.log(`  Stake:    ${ethers.formatEther(REQUIRED_STAKE)} ETH required\n`);
 
-    // ── 1. Deploy ValidaVulnerability ──────────────────────────────────────────
-    console.log("▶ Step 1 of 4: Deploying ValidaVulnerability...");
-    const vulnArtifact = loadArtifact("ValidaVulnerability");
+    // ── 1. Deploy ZyraVulnerability ──────────────────────────────────────────
+    console.log("▶ Step 1 of 4: Deploying ZyraVulnerability...");
+    const vulnArtifact = loadArtifact("ZyraVulnerability");
     const { contract: vuln, address: vulnAddress } = await deploy(signer, vulnArtifact);
 
-    // ── 2. Deploy ValidaEscrow (linked to ValidaVulnerability) ──────────────────
-    console.log("\n▶ Step 2 of 4: Deploying ValidaEscrow...");
-    const escrowArtifact = loadArtifact("ValidaEscrow");
+    // ── 2. Deploy ZyraEscrow (linked to ZyraVulnerability) ──────────────────
+    console.log("\n▶ Step 2 of 4: Deploying ZyraEscrow...");
+    const escrowArtifact = loadArtifact("ZyraEscrow");
     const { contract: escrow, address: escrowAddress } = await deploy(
         signer, escrowArtifact, vulnAddress, REQUIRED_STAKE
     );
 
-    // ── 3. Link escrow contract on ValidaVulnerability ─────────────────────────
+    // ── 3. Link escrow contract on ZyraVulnerability ─────────────────────────
     console.log("\n▶ Step 3 of 4: Linking contracts...");
     let tx = await vuln.setEscrowContract(escrowAddress);
     await tx.wait();
-    console.log(`   ✓ ValidaVulnerability.setEscrowContract(${escrowAddress})`);
+    console.log(`   ✓ ZyraVulnerability.setEscrowContract(${escrowAddress})`);
 
-    // ── 4. Deploy ValidaZKVerifier (Phase 4) ───────────────────────────────────
-    console.log("\n▶ Step 4 of 4: Deploying ValidaZKVerifier (Phase 4)...");
+    // ── 4. Deploy ZyraZKVerifier (Phase 4) ───────────────────────────────────
+    console.log("\n▶ Step 4 of 4: Deploying ZyraZKVerifier (Phase 4)...");
     let zkVerifierAddress = null;
     try {
-        const zkArtifact = loadArtifact("ValidaZKVerifier");
+        const zkArtifact = loadArtifact("ZyraZKVerifier");
         const { contract: zkVerifier, address: zkAddr } = await deploy(
             signer, zkArtifact, vulnAddress
         );
@@ -98,7 +98,7 @@ async function main() {
 
         tx = await vuln.setZKVerifier(zkVerifierAddress);
         await tx.wait();
-        console.log(`   ✓ ValidaVulnerability.setZKVerifier(${zkVerifierAddress})`);
+        console.log(`   ✓ ZyraVulnerability.setZKVerifier(${zkVerifierAddress})`);
 
         // If AuthBypassVerifier is available, register it
         try {
@@ -106,12 +106,12 @@ async function main() {
             const { address: authVerifierAddress } = await deploy(signer, authArtifact);
             tx = await zkVerifier.addTemplate(1, authVerifierAddress);
             await tx.wait();
-            console.log(`   ✓ ValidaZKVerifier.addTemplate(1 = AuthBypass, ${authVerifierAddress})`);
+            console.log(`   ✓ ZyraZKVerifier.addTemplate(1 = AuthBypass, ${authVerifierAddress})`);
         } catch {
             console.log("   ⚠  AuthBypassVerifier not available — run scripts/setup-zk.sh first");
         }
     } catch {
-        console.log("   ⚠  ValidaZKVerifier artifact not found — Phase 4 skipped");
+        console.log("   ⚠  ZyraZKVerifier artifact not found — Phase 4 skipped");
         console.log("       Run scripts/setup-zk.sh then recompile to enable ZK verification");
     }
 
@@ -129,7 +129,7 @@ async function main() {
     console.log("  1. Fund the bounty pool: escrow.fundBountyPool{value: X ETH}()");
     console.log("  2. Register admin as auditor if testing: vuln.registerAuditor(adminAddress)");
     if (!zkVerifierAddress) {
-        console.log("  3. Phase 4: run scripts/setup-zk.sh, redeploy ValidaZKVerifier");
+        console.log("  3. Phase 4: run scripts/setup-zk.sh, redeploy ZyraZKVerifier");
     }
     console.log("════════════════════════════════════════════════════════════\n");
 
@@ -139,9 +139,9 @@ async function main() {
         chainId: network.chainId.toString(),
         deployedAt: new Date().toISOString(),
         contracts: {
-            ValidaVulnerability: vulnAddress,
-            ValidaEscrow: escrowAddress,
-            ValidaZKVerifier: zkVerifierAddress,
+            ZyraVulnerability: vulnAddress,
+            ZyraEscrow: escrowAddress,
+            ZyraZKVerifier: zkVerifierAddress,
         }
     };
     fs.writeFileSync("deployment.json", JSON.stringify(manifest, null, 2));

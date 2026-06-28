@@ -18,7 +18,7 @@ include "circomlib/circuits/comparators.circom";
  * PUBLIC inputs (visible to verifier / stored on-chain):
  *   functionSelector   — identifies which function's auth is being bypassed
  *   expectedAuthState  — the value that SHOULD be required for auth (e.g. 1 = admin)
- *   systemCodeHash     — fingerprint of the target system (from ValidaVulnerability struct)
+ *   systemCodeHash     — fingerprint of the target system (from ZyraVulnerability struct)
  *   commitmentHash     — Poseidon(exploitInput, salt) — links proof to on-chain commitment
  *
  * CONSTRAINTS:
@@ -28,7 +28,7 @@ include "circomlib/circuits/comparators.circom";
  * PHASE 4 NOTE:
  *   This is the only template in Phase 4.
  *   Future templates (HashMismatch, PrivEscalation, ReplayAttack, LogicError) are added
- *   via the TemplateRegistry in ValidaZKVerifier.sol without changing this circuit.
+ *   via the TemplateRegistry in ZyraZKVerifier.sol without changing this circuit.
  *
  * INSTALL DEPS:
  *   npm install circomlib
