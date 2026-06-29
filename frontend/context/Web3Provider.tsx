@@ -39,10 +39,13 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
     return [];
   }, []);
 
-  // Without an onError handler, a rejected/locked-wallet connection (or the
-  // autoConnect race on refresh) throws uncaught and looks like a hard crash.
-  // Swallow the benign cases; log the rest with a clear prefix so real failures
-  // (e.g. a devnet RPC rejection) are diagnosable in the console.
+  // autoConnect is OFF (see below). Phantom's Wallet Standard adapter throws
+  // "WalletConnectionError: Unexpected error" when wallet-adapter tries to
+  // silently reconnect on mount (locked wallet / session not yet trusted), so
+  // we connect only on an explicit user click. This onError handler still
+  // swallows the benign cases (user dismissed the popup, wallet not ready) and
+  // logs real failures with a clear prefix so a devnet RPC rejection stays
+  // diagnosable in the console.
   const onError = useCallback((error: WalletError) => {
     if (
       error instanceof WalletNotReadyError ||
@@ -61,7 +64,7 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
     <ConnectionProvider endpoint={endpoint} config={{ commitment: "confirmed" }}>
       <SolanaWalletAdapterProvider
         wallets={wallets}
-        autoConnect
+        autoConnect={false}
         onError={onError}
         localStorageKey="zyra_wallet"
       >
