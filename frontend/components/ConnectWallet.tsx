@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useWallet as useSolanaWallet } from "@solana/wallet-adapter-react";
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Button } from "@/components/UI";
 import { useWallet } from "@/context/WalletContext";
 
@@ -12,14 +11,13 @@ import { useWallet } from "@/context/WalletContext";
  * shows the truncated address when connected.
  */
 export function ConnectWallet({ className }: { className?: string }) {
-  const { setVisible } = useWalletModal();
   const { publicKey, connected, disconnect } = useSolanaWallet();
-  const { isLoading } = useWallet();
+  const { isLoading, connectWallet } = useWallet();
 
   if (!connected || !publicKey) {
     return (
       <Button
-        onClick={() => setVisible(true)}
+        onClick={connectWallet}
         isLoading={isLoading}
         data-testid="connect-wallet"
         className={

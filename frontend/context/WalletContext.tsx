@@ -34,13 +34,19 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { connection } = useConnection();
   const anchorWallet = useAnchorWallet();
-  const { connected, connecting, disconnect } = useSolanaWallet();
+  const { connected, connecting, disconnect, connect, wallet } =
+    useSolanaWallet();
   const { setVisible } = useWalletModal();
+  // Bumped on every explicit "Connect" click. autoConnect is OFF (so the
+  // wallet-adapter never does a silent reconnect-on-mount, which is what made
+  // Phantom throw "WalletConnectionError: Unexpected error"). Instead we drive
+  // the connect ourselves, but ONLY in response to this user intent.
+  const [connectIntent, setConnectIntent] = useState(0);
 
   const [role, setRole] = useState<Role>(null);
   const [isRoleLoading, setIsRoleLoading] = useState(false);
-  // Grace window so the wallet-adapter autoConnect can run before any "not
-  // connected" route guard fires (prevents a flash-redirect to home on refresh).
+  // Grace window so an in-flight connect can settle before any "not connected"
+  // route guard fires (prevents a flash-redirect to home right after a click).
   const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
@@ -56,7 +62,25 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
     [anchorWallet]
   );
 
-  const connectWallet = () => setVisible(true);
+  // If a wallet is already selected (e.g. picked earlier this session), just
+  // (re)connect it; otherwise open the modal so the user can choose one. Either
+  // way bump the intent so the effect below performs the actual connect.
+  const connectWallet = () => {
+    setConnectIntent((n) => n + 1);
+    if (!wallet) setVisible(true);
+  };
+
+  // Perform the explicit connect once the user has shown intent AND a wallet is
+  // selected (either it was already selected, or they just picked one in the
+  // modal — which sets `wallet` and re-runs this effect). connect() is a real
+  // user-gesture-backed call, so Phantom opens its approval popup normally;
+  // errors (rejected/locked) are handled by the provider's onError.
+  useEffect(() => {
+    if (connectIntent === 0 || !wallet || connected || connecting) return;
+    void connect().catch(() => {
+      /* surfaced via Web3Provider onError */
+    });
+  }, [connectIntent, wallet, connected, connecting, connect]);
 
   const disconnectWallet = () => {
     void disconnect();
